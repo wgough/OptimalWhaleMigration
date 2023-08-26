@@ -1,0 +1,769 @@
+---
+title: "Optimal Migratory Speed of Large Capital Breeders"
+author: "Gough, W.T., Czapanskiy, M.F., Savoca, M.S., Hazen, E.L., Oestreich, W.K., Fahlbusch, J., Palacios, D.M., Bejder, L., Goldbogen, J.A."
+date: "7/28/2023"
+bibliography: ZoteroLibraryGough.json
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Libraries, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+library(knitr)
+library(tinytex)
+library(rbbt)
+library(ggspatial)
+library(grid)
+library(gridExtra)
+```
+
+# Outline of Ideas
+
+1) Migration is an extreme behavioral process and might be impacted  by climate change into the future.
+
+2) Krogh Principle: Baleen whales are the best species to study migration because they display some of the longest migrations of any animals plus they are capital breeders.
+
+3) We would like to know if there is an optimal migratory speed for large capital breeding animals that minimizes the energetic cost of the migration as a function of their annual energy gain.
+
+4) How does this theoretical optimal speed change with changes to the migratory variables
+
+# Abstract
+
+Long-distance migrations are one of the most energetically challenging behaviors observed within the animal kingdom and are undertaken to find seasonally variable food sources or move between spatially distinct foraging and breeding grounds. Large body sizes, such as those seen in mysticete whales (Mysticeti), allow for migrations across vast distances. Mysticetes must also rely on the energy from a defined feeding season to last them throughout the year, a strategy known as capital breeding. This annual strategy means that maximum migratory distance should be a direct result of the amount of energy gained during the feeding season. Using estimates of foraging and swimming energetic intake and costs for mysticetes of varying body sizes, we estimated the energy gained during a mysticete foraging season as well as the energy subsequently used during migration. For a successful foraging season, the energetic cost of migration relative to intake only amounts to ~20% across body sizes, while a poor foraging year could result in exorbitant migratory costs of ~100% or more. We also found that migratory costs are dependent on total distance, duration, and swimming speed. Combining a theoretical model with satellite tracks of individual whales, we determined that longer migrations are more costly and occur at higher speeds than shorter migrations. In a rapidly changing ocean, even small differences in the distance or duration of a migration could have major impacts on individual fitness. NEEDS TO BE UPDATED
+
+# Introduction
+
+Animal migration serves an important role in the re-distribution of nutrients, genetic dispersal across population boundaries, and to maximize fitness across a dynamic landscape [@dingleWhatMigration2007]. Long-distance migrations can span continents and ocean basins and are one of the most energetically extreme behaviors observed within the animal kingdom. Many species transit thousands of kilometers in search of seasonally variable food resources [@blockTrackingApexMarine2011; @lasorteImplicationsMidlatitudeClimate2016; @merkleLargeHerbivoresSurf2016] or to move between spatially distinct foraging and breeding grounds [@kenneyMigrationForagingStrategies2020]. The distances traveled during these journeys are often informed by environmental features [@abrahmsMemoryResourceTracking2019; @blockTrackingApexMarine2011; @oestreichAcousticSignatureReveals2022], but they are also constrained by physiological limitations that must also be overcome through novel adaptation [@weberPhysiologyLongdistanceMigration2009]. 
+
+A common adaptation that aids long migration is large body size and increased energy storage [@burnsMigratoryLineagesRapidly2020; @heinEnergeticBiomechanicalConstraints2012], with the exception being powered flight (e.g., insects and songbirds) [@alerstamLongdistanceMigrationEvolution2003]. Larger animals have lower mass-specific metabolic rates [@glazier4powerLawVariation2005; @kleiberMetabolicTurnoverRate1975] and costs of transport [@taylorEnergeticsMechanicsTerrestrial1982a; @williamsEvolutionCostEfficient1999], resulting in more efficient locomotion over greater distances. Even as mass-specific costs decrease for larger animals, absolute costs increase and must be accounted for with efficient prey capture strategies [@goldbogenWhyWhalesAre2019; @mcnabComparativeEcologicalEvolutionary1999]. Many of the largest terrestrial species are ruminants that take advantage of seasonal greening for their plant-based diet and a specialized digestive apparatus to increase their energetic surplus [@aikensWavelikePatternsPlant2020; @merkleLargeHerbivoresSurf2016]. Large marine species are unable to utilize such stability and predictability in ocean resources (but see @abrahmsMemoryResourceTracking2019), instead relying on ephemeral prey patches of fish, krill, or copepods [@carrollFlexibleUseDynamic2021; @goldbogenWhyWhalesAre2019].
+
+Many of the largest marine animals, including mysticete (baleen) whales (Mysticeti), whale sharks (Rhincodon typus), and oceanic manta rays (Mobula birostris), efficiently exploit small, abundant prey species (e.g., schooling fish and crustaceans) by filter feeding on large aggregations [@goldbogenWhyWhalesAre2019; @mottaFeedingAnatomyFilterfeeding2010; @paig-tranFilterPadsFiltration2013]. These large body sizes allow many species to undertake months-long migrations over tens of thousands of kilometers [@corkeronWhyBaleenWhales1999; @guzmanLongestRecordedTransPacific2018; @kenneyMigrationForagingStrategies2020]. Unlike terrestrial ungulates that forage during the migration, mysticetes are capital breeders, meaning they have a defined feeding season (spring and summer months) and exhibit relatively little feeding behavior outside the feeding season [@lockyerGrowthEnergyBudgets1981]. Thus, mysticetes need to live off these reserves for the rest of the year [@drentPrudentParentEnergetic1980; @jonssonCapitalIncomeBreeding1997; @stephensCapitalBreedingIncome2009]. This annual strategy means that maximum migratory distance should be a direct result of the amount of energy gained during the feeding season. 
+
+Recent studies on several mysticete species combining biologging tags with UAS morphometrics and hydrodynamic physical modeling have produced high-resolution estimates of energetic intake and costs for both foraging and swimming [@goldbogenWhyWhalesAre2019; @savocaBaleenWhalePrey2021]. Studies using satellite tags have also produced estimates of mysticete bi-directional migration durations ranging from ~60-180 days and distances ranging from ~5000-20000 km [@felixSatelliteTrackingSighting2014; @kettemerRoundtripMigrationEnergy2022; @mateMovementsNorthPacific1999; @mateCriticallyEndangeredWestern2015; @modestFirstDescriptionMigratory2021; @riekkolaEnvironmentalDriversHumpback2019]. Using these comprehensive datasets, we estimate the net energy gained during the foraging season as well as the energy subsequently used during migration. We hypothesize that due to the bulk filter feeding strategy employed by mysticetes that has shown to be highly energetically efficient, migration will not be constrained by energy acquisition during the foragins season, but rather by timing and the potential opportunity costs of lost foraging periods. As an extension, we predict that whales that undertake longer migrations will do so at faster swimming speeds despite the increased energetic cost of doing so. As a validation, we will compare our modeled predictions against migration distances and swimming speeds taken from the real-world satellite tag dataset.
+
+![Figure 1. Schematic of a humpback whale annual cycle with a generic migratory route highlighted](./figs/AnnualCycleSchematic.jpg)
+
+# Materials & Methods
+
+## Species
+
+We included four species in our energetic analyses: blue (_Balaenoptera musculus_), fin (_Balaenoptera physalus_), humpback (_Megaptera novaeangliae_), and Antarctic minke (_Balaenoptera bonaerensis_). Informed by morphological [@kahane-rapportAllometricScalingMorphology2018] and UAV datasets [@goughScalingOscillatoryKinematics2021; @goughFastFuriousEnergetic2022], we chose a five-meter range of body lengths ($TL_{\text{body}}$) for each species. In a review of migratory track satellite tag data, we found data for the four previously-mentioned species in addition to sei (_Balaenoptera borealis_) and gray whale (_Eschrichtius robustus_).
+
+## Satellite Tag Data
+
+Satellite tag data was compiled from multiple literature sources and tag types (Table 1). To be included in our dataset, a satellite track had to include: 1) a complete migration moving in either direction (i.e. from foraging ground to breeding ground or vice-versa), 2) not include any portions of swimming on the foraging or breeding grounds, 3) the overall distance covered by the animal during the migration ($D_{\text{mig}}$; km), and 4) the duration of the migratory period ($T_{\text{mig.uni}}$; days). Using this data, we were able to calculate the GPS-based over-ground speed of each animal ($U_{\text{over-ground}}$; $m s^{-1}$) using the equation:
+
+$$
+U_{\text{over-ground}} = \frac{D_{\text{mig}}*1000}{T_{\text{mig.uni}}*86400} \quad (1)
+$$
+
+Using average values for $D_{\text{mig}}$, $T_{\text{mig.uni}}$, and $U_{\text{over-ground}}$ (Fig 1), we calculated the distance ($D_{\text{mig.avg}}$), duration ($T_{\text{mig.uni.avg}}$), and over-ground speed ($U_{\text{over-ground.avg}}$) for a stereotypical migratory route. We used these values to parameterize a standardized annual cycle as well as our energetic models.
+
+```{r Literature Review Import, echo=FALSE}
+load("data/MigrationDistancesLit.rda")
+
+MigrationDistancesLit <- MigrationDistancesLit %>% 
+  filter(Complete == "Y") 
+
+LitDataForTable <- MigrationDistancesLit %>% 
+  subset(select = c(Species, Source, Migratory_Route_Simple, Direction_of_Travel, Migration_Distance_km, Migration_Duration_days, Migration_Speed_m_s)) %>% 
+  rename('Species' = 'Species',
+         'Data Source' = 'Source',
+         'Migratory Route' = 'Migratory_Route_Simple',
+         'Direction' = 'Direction_of_Travel',
+         'Distance' = 'Migration_Distance_km',
+         'Duration' = 'Migration_Duration_days',
+         'Speed' = 'Migration_Speed_m_s')
+
+MigrationDistancesLitAvgs <- MigrationDistancesLit %>% 
+  filter(Complete == "Y") %>% 
+  group_by(Source, Species, Migratory_Route_Simple, Direction_of_Travel) %>% 
+  summarize(Migration_Distance_km = mean(Migration_Distance_km),
+            Migration_Duration_days = mean(Migration_Duration_days),
+            Migration_Speed_m_s = mean(Migration_Speed_m_s),
+            Number_of_Observations = n(),
+            .groups = 'drop')
+```
+
+```{r MigrationLiteratureDensities PDF Version, include=FALSE}
+pDens1 <- ggplot(MigrationDistancesLit, aes(x = Migration_Duration_days)) + 
+  geom_density(fill = 'grey60') + 
+  geom_vline(aes(xintercept=mean(Migration_Duration_days)),
+             linetype="dashed", size=1) +
+  geom_text(aes(x = mean(Migration_Duration_days)+4, y = 0.0005, label=round(mean(Migration_Duration_days), digits = 0)), 
+            size=14) +
+  labs(x = bquote(T[mig]* " (days)"),
+       y = "Density") +
+  theme_classic(base_size = 8) +
+  theme(axis.text.x = element_text(size = 24),
+        axis.text.y = element_blank(),
+        axis.title = element_text(size = 30),
+        axis.ticks = element_blank(),
+        legend.position = "none",
+        panel.grid.minor = element_blank())
+
+pDens2 <- ggplot(MigrationDistancesLit, aes(x = Migration_Speed_m_s)) + 
+  geom_density(fill = 'grey60') + 
+  geom_vline(aes(xintercept=mean(Migration_Speed_m_s)),
+             linetype="dashed", size=1) +
+  geom_text(aes(x = mean(Migration_Speed_m_s)+0.08, y = 0.028, label=round(mean(Migration_Speed_m_s), digits = 2)), 
+            size=14) +
+  labs(x = bquote(U[over-ground]* " (m s"^-1*")"),
+       y = "Density") +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 24),
+        axis.text.y = element_blank(),
+        axis.title = element_text(size = 30),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.position = "none",
+        panel.grid.minor = element_blank())
+
+pDens3 <- ggplot(MigrationDistancesLit, aes(x = Migration_Distance_km)) + 
+  geom_density(fill = 'grey60') + 
+  geom_vline(aes(xintercept=mean(Migration_Distance_km)),
+             linetype="dashed", size=1) +
+  geom_text(aes(x = mean(Migration_Distance_km)+1400, y = 0.000005, label=round(mean(Migration_Distance_km), digits = 4)), 
+            size=14) +
+    labs(x = bquote(D[mig]* " (km)"),
+       y = "Density") +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 24),
+        axis.text.y = element_blank(),
+        axis.title = element_text(size = 30),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.position = "none",
+        panel.grid.minor = element_blank())
+
+cowplot::plot_grid(pDens1, pDens2, pDens3,
+                   nrow = 1,
+                   ncol = 3,
+                   align = "hv",
+                   axis = "bl",
+                   labels = NULL)
+
+ggsave("figs/MigrationLiteratureDensities.pdf", height = 480, width = 960, units = "mm", dpi = 300)
+```
+
+```{r MigrationLiteratureDensities Markdown Version, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='all', fig.align='center', fig.dim = c(8, 4), fig.cap = "Figure 2. Density graphs for the migratory distance, duration, and over-ground speed. Vertical lines denote the mean value for each graph."}
+pDens1b <- ggplot(MigrationDistancesLit, aes(x = Migration_Duration_days)) + 
+  geom_density(fill = 'grey60') + 
+  geom_vline(aes(xintercept=mean(Migration_Duration_days)),
+             linetype="dashed", size=1) +
+  geom_text(aes(x = mean(Migration_Duration_days)+8, y = 0.0008, label=round(mean(Migration_Duration_days), digits = 0)), 
+            size=4) +
+  labs(x = bquote(T[mig]* " (days)"),
+       y = "Density") +
+  theme_classic(base_size = 8) +
+  theme(axis.text.x = element_text(size = 8),
+        axis.text.y = element_blank(),
+        axis.title = element_text(size = 12),
+        axis.ticks = element_blank(),
+        legend.position = "none",
+        panel.grid.minor = element_blank())
+
+pDens2b <- ggplot(MigrationDistancesLit, aes(x = Migration_Speed_m_s)) + 
+  geom_density(fill = 'grey60') + 
+  geom_vline(aes(xintercept=mean(Migration_Speed_m_s)),
+             linetype="dashed", size=1) +
+  geom_text(aes(x = mean(Migration_Speed_m_s)+0.12, y = 0.046, label=round(mean(Migration_Speed_m_s), digits = 2)), 
+            size=4) +
+  labs(x = bquote(U[over-ground]* " (m s"^-1*")"),
+       y = "Density") +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 8),
+        axis.text.y = element_blank(),
+        axis.title = element_text(size = 12),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.position = "none",
+        panel.grid.minor = element_blank())
+
+pDens3b <- ggplot(MigrationDistancesLit, aes(x = Migration_Distance_km)) + 
+  geom_density(fill = 'grey60') + 
+  geom_vline(aes(xintercept=mean(Migration_Distance_km)),
+             linetype="dashed", size=1) +
+  geom_text(aes(x = mean(Migration_Distance_km)+1800, y = 0.000008, label=round(mean(Migration_Distance_km), digits = 2)), 
+            size=4) +
+    labs(x = bquote(D[mig]* " (km)"),
+       y = "Density") +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 8),
+        axis.text.y = element_blank(),
+        axis.title = element_text(size = 12),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.position = "none",
+        panel.grid.minor = element_blank())
+
+pDens <- cowplot::plot_grid(pDens1b, pDens2b, pDens3b,
+                            nrow = 1,
+                            ncol = 3,
+                            align = "hv",
+                            axis = "bl",
+                            labels = NULL)
+plot(pDens)
+```
+
+## Standardized Annual Cycle
+
+Our energetic models were predicated on a standardized annual cycle, with costs and benefits calculated as deviations from that cycle. In order to determine the portion of the year devoted to migration, we used our calculated $T_{\text{mig.uni.avg}}$ from our literature search and estimated to 60 days for a uni-directional migration ($T_{\text{mig.uni.standard}}$), resulting in 120 days spent migrating during a standardized annual cycle ($T_{\text{mig.year.standard}}$). For the time spent on the breeding ground ($T_{\text{breed.standard}}$), we estimated 90 days based on sightings data, specifically from Maui-Nui for humpback whales (van Aswegen, pers. comm.). Finally, we estimated the feeding season as the remaining portion of the year, set to 120 days ($T_{\text{feed.standard}}$). Reproduction and weaning of calves requires a set period of time and the sighting data suggest that the breeding season could be a more set duration than the feeding season. As a result, our model presumes that changes to the migratory duration due to swimming speed will result in a longer or shorter foraging season duration while the breeding season duration remains unchanged ().
+
+```{r Annual Cycle Variables, include=FALSE}
+BreedingDays = 90
+MigratoryDays = 60
+FeedDays = 120 
+```
+
+## Foraging Season Energetics
+
+We determined the net energy obtained from a day of foraging ($Enet_{\text{feed.day}}$; kJ) using the equation:
+
+$$
+E_{\text{feed.day}} = E_{\text{feed.day.gain}} - E_{\text{feed.day.cost}} \quad (2)
+$$
+
+where $E_{\text{feed.day.gain}}$ and $E_{\text{feed.day.cost}}$ are calculated for each species at a given body length using body length regressions calculated by @goughFastFuriousEnergetic2022. These regressions subtracted the energetic cost of a lunge feeding event from the energetic intake of that same event, then multiplied the duration of the lunge feeding event by the average number of lunges performed in a day for that species taken from @savocaBaleenWhalePrey2021. For the remaining portion of the day, we calculated the energetic cost per second using metabolic equations outlined by @goughFastFuriousEnergetic2022 and body mass ($M_{\text{body}}$; kg) calculated from body length using methods outlined by @kahane-rapportAllometricScalingMorphology2018. To determine the net energy flux for a standard feeding season ($E_{feed.year.standard}$; kJ), we multiplied $E_{\text{feed.day}}$ by the $T_{\text{feed.standard}}$ using the equation:
+
+$$
+E_{\text{feed.year.standard}} = E_{\text{feed.day}}*T_{\text{feed.standard}} \quad (3)
+$$
+
+```{r Load/Elongate Energetic Model, include=FALSE}
+load("data/EnergyModel.rda")
+
+EnergyModel <- EnergyModel %>% 
+  slice(rep(1:n(), each = 61))
+```
+
+``` {r Feeding Day Net Energy Calculations, include=FALSE}         
+EnergyModel <- EnergyModel %>% 
+  mutate(Log10_EcostFeedDay_kJ = (1.0087*Log10BodyLength_m)+5.1886,
+         EcostFeedDay_kJ = 10^Log10_EcostFeedDay_kJ,
+         Log10_EgainFeedDay_kJ = (1.3027*Log10BodyLength_m)+5.8972,
+         EgainFeedDay_kJ = 10^Log10_EgainFeedDay_kJ,
+         EnetFeedDay_kJ = EgainFeedDay_kJ - EcostFeedDay_kJ,
+         EnetFeedYear_kJ = EnetFeedDay_kJ*FeedDays)
+```
+
+## Migratory Route Energetics
+
+We estimated the combined energetic cost of swimming and metabolism ($E_{\text{swim.sec}}$; $kJs^{-1}$) for each species at a given body length using the equation:
+
+$$
+E_{\text{swim.sec}} = 
+(\frac{P_{\text{T}}*M_{\text{body}}}{\eta_{\text{met}}*\eta_{\text{prop}}}+
+\frac{BMR_{\text{kleiber}}*1000}{86400}) \div 1000 \quad (4)
+$$
+
+where $P_{\text{T}}$ is the thrust power output ($Wkg^{-1}$) estimated for a given swimming speed ($U_{swim}$; $ms^{-1}$) with a regression taken from @goughScalingOscillatoryKinematics2021, $\eta_{\text{met}}$ is a metabolic efficiency factor set at 0.25 [@fishTransitionsDragbasedLiftbased1996; @fishReviewDolphinHydrodynamics1999; @potvinRorqualLungeFeedingEnergetics2021], $\eta_{\text{prop}}$ is a propulsive efficiency factor set at 0.90 [@goughScalingOscillatoryKinematics2021], $BMR_{\text{kleiber}}$ is the basal metabolic rate using a Kleiber function ($70*{M_{\text{body}}}^{075}$) [@kleiberMetabolicTurnoverRate1975]. To determine the energetic cost of a single migratory day ($E_{\text{mig-day}}$; kJ), we multiplied the per-second value of $E_{\text{swim.sec}}$ by the percentage of time spent actively fluking for each species ($\%_{\text{fluke}}$) and the number of seconds in a day:
+
+$$
+E_{\text{mig.day}} = E_{\text{swim.sec}}*\%_{\text{fluke}}*86400 \quad (5)
+$$
+
+We estimated $\%_{\text{fluke}}$ for each species using previously published tag data from the four species included in our analyses [@goughFastFuriousEnergetic2022]. These estimations resulted in 35% for the blue whale, 40% for for fin whale, 55% for the humpback whale, and 65% for the minke whale. Finally, we could calculate the overall cost of a migration ($E_{\text{mig.year.standard}}$) using the equation:
+
+$$
+E_{\text{mig.year.standard}} = E_{\text{mig.day}}*T_{\text{mig.year.standard}} \quad (6)
+$$
+
+```{r Insert Metabolic Calculations, include=FALSE}
+EnergyModel <- EnergyModel %>% 
+  mutate(RobMR = (1.6*4.1*(BodyMassFromShirel_kg^0.75))/1000,
+         MaxKleiberBMR = OptimalWhaleMigration::pred_mr(mass_kg = BodyMassFromShirel_kg, 
+                                                        mr_method = "kleiber", unit = "kJ_day"),
+         MaxWhiteSeymourBMR = OptimalWhaleMigration::pred_mr(mass_kg = BodyMassFromShirel_kg, 
+                                                             mr_method = "whiteseymour", unit = "kJ_day"),
+         MaxKolokotronesetalBMR = OptimalWhaleMigration::pred_mr(mass_kg = BodyMassFromShirel_kg, 
+                                                                 mr_method = "kolokotronesetal", unit = "kJ_day"))
+```
+
+```{r Efficiency Variables, include=FALSE}
+MetEff = 0.25
+PropEff = 0.90
+```
+
+```{r Swimming Variables, include=FALSE}
+PercFluking = rep(c(0.35,0.4,0.55,0.65), each = 305)
+SpeedSeq = seq(1, 4, by=0.05)
+SwimSpeeds = rep(SpeedSeq, length.out = length(SpeedSeq)*20)
+OverGroundSpeedSeq = seq(0.5, 2.0, by=0.025)
+OverGroundSpeeds = rep(OverGroundSpeedSeq, length.out = length(OverGroundSpeedSeq)*20)
+
+```
+
+```{r Thrust Power and Cost of Swimming Calculations, include=FALSE}
+EnergyModel <- EnergyModel %>% 
+  mutate(PercFluking = PercFluking,
+         SwimSpeeds = SwimSpeeds,
+         OverGroundSpeeds = OverGroundSpeeds,
+         Log10_ThrustPower_W_Kg = 0.381*(SwimSpeeds)-1.215,
+         ThrustPower_W_kg = 10^Log10_ThrustPower_W_Kg,
+         
+         ECostSwim_J_s = ((ThrustPower_W_kg*BodyMassFromShirel_kg)/(MetEff*PropEff))+(MaxKleiberBMR*1000/86400),
+         ECostSwim_kJ_s = ECostSwim_J_s/1000,
+         ECostSwim_kJ_Day = ECostSwim_kJ_s*(86400*PercFluking))
+
+```
+  
+## Speed-Adjusted Energetics
+
+We used previously published data from 2 migrating blue whales [@oestreichAnimalBorneMetricsEnable2020] to compare straight-line migratory speed to both $U_{\text{over-ground}}$ and $U_{\text{swim}}$. These measurements resulted in a multiplicative factor to convert values of $U_{\text{over-ground}}$ from our literature review into $U_{\text{swim}}$ values that could be used to more accurately calculate $E_{\text{swim-sec}}$ (Figure 3). This factor also allowed us to create a range of speeds for both $U_{\text{over-ground}}$ and $U_{\text{swim}}$ to calculate changes in annual energy flux.
+
+```{r BlueWhaleSpeedsMapped, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='last', fig.align='center', fig.dim = c(8, 4), fig.cap = "Figure 3. Data from two multi-sensor blue whale tag deployments used to calculate a conversion factor between over-ground speed and swimming speed. The map on the left shows the gps tracks for each whale during the period of migratory swimming. The graphs on the right show the time-depth traces for each whale during the same period of migratory swimming."}
+
+load("data/bf.rda")
+load("data/world.rda")
+load("data/dataset1hz_tag11.rda")
+load("data/dataset1hz_tag14.rda")
+load("data/diveDataset.rda")
+load("data/locDatasetMigration.rda")
+
+pMap <- ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(min(diveDataset$Long,na.rm = TRUE)-.5, max(diveDataset$Long,na.rm = TRUE)+.5),
+           ylim = c(min(diveDataset$Lat,na.rm = TRUE)-.5, max(diveDataset$Lat,na.rm = TRUE)+.5), expand = FALSE) +
+  # add 500m contour
+  geom_contour(data = bf,
+               aes(x=x, y=y, z=z),
+               breaks=c(-500),
+               size=c(0.4),
+               colour="darkgrey", show.legend = FALSE) +
+  #geom_text_contour(data = bf, aes(x=x, y=y,z = z),breaks=c(-100,-200,-300,-400),
+  #geom_text_contour(data = bf, aes(x=x, y=y,z = z),breaks=c(-500),
+  #                  show.legend = FALSE, size = 2.2, alpha = .6, nudge_y = -.002) +
+  geom_path(data = locDatasetMigration, aes(Long,Lat, color = depid),size=1) +
+  annotation_scale(location = "bl", width_hint = 0.5) +
+  xlab("Longitude") +
+  ylab("Latitude") +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 8),
+        axis.title = element_text(size = 12),
+        legend.position = "none",
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(color = gray(.5), linetype = "dashed", size = 0.2),
+        panel.background = element_rect(fill = "aliceblue"))
+
+pDive11 <- ggplot(data = dataset1hz_tag11) +
+  geom_path(aes(x=dttz, y=-p), color = '#DA7964') +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 8),
+        axis.title = element_blank(),
+        legend.position = "none",
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.background = element_rect(fill = "aliceblue"))
+
+pDive14 <- ggplot(data = dataset1hz_tag14) +
+  geom_path(aes(x=dttz, y=-p), color = '#78D8D5') +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 8),
+        axis.title = element_blank(),
+        legend.position = "none",
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.background = element_rect(fill = "aliceblue"))
+pDive14
+
+y.lab <- textGrob("Depth (m)", 
+                   gp=gpar(fontface="bold", fontsize=15), rot=90)
+
+pDive <- cowplot::plot_grid(pDive11, pDive14,
+                            nrow = 2,
+                            ncol = 1,
+                            align = "hv",
+                            axis = "bl",
+                            labels = NULL)
+
+pDiveLabel <- grid.arrange(arrangeGrob(pDive, left = y.lab))
+
+pMapDive <- cowplot::plot_grid(pMap, pDiveLabel,
+                            nrow = 1,
+                            ncol = 2,
+                            align = "hv",
+                            axis = "bl",
+                            labels = NULL)
+plot(pMapDive)
+```
+
+For a given $U_{\text{over-ground}}$ value, we could calculate an adjusted value for the duration of a uni-directional migratory period ($T_{\text{mig.uni.adj}}$) using the equation:
+
+$$
+T_{\text{mig.uni.adj}}=\frac{D_{\text{mig}}*1000*86400}{U_{\text{over-ground}}} \quad (7)
+$$
+
+with the overall days spent migrating during an annual cycle ($T_{\text{mig.year.adj}}$) given given as:
+
+$$
+T_{\text{mig.year.adj}}= T_{\text{mig.uni.adj}}*2 \quad (8)
+$$
+
+We could then update the uni-directional cost of migration ($E_{\text{mig.uni.adj}}$) using the equation:
+
+$$
+E_{\text{mig.uni.adj}} = E_{\text{mig.day}}*T_{\text{mig.uni.adj}} \quad (9)
+$$
+
+with the annual cost of migration given as:
+
+$$
+E_{\text{mig.year.adj}} = E_{\text{mig.uni.adj}}*2 \quad (10)
+$$
+
+We then used our $T_{\text{mig.year.adj}}$ values across our range of $U_{\text{over-ground}}$ to calculate the change in feeding season duration from $T_{\text{mig.year.standard}}$ due to migratory speed ($\Delta T_{\text{feed}}$) using the equation:
+
+$$
+\Delta T_{\text{feed.year}} = T_{\text{mig.year.adj}}-T_{\text{mig.year.standard}} \quad (11)
+$$
+
+and the subsequent change in net energy intake per year ($\Delta E_{\text{feed.year}}$) using the following equations:
+
+$$
+\Delta E_{\text{feed.year}} = E_{\text{feed-day}}*\Delta T_{\text{feed.year}} \quad (12)
+$$
+
+Next, we recalculated the net energy from the foraging season ($E_{\text{feed.year.adj}}$) using the equation:
+
+$$
+E_{\text{feed.year.adj}} = E_{\text{feed.year.standard}} - \Delta E_{\text{feed.year}} \quad (13)
+$$
+
+We then calculated the ratio of between $E_{\text{mig.year.adj}}$ and $E_{\text{feed.year.adj}}$ ($E_{ratio}$) using the following equation:
+
+$$
+E_{\text{ratio}} = \frac{E_{\text{mig.year.adj}}}{E_{\text{feed.year.adj}}} \quad (14)
+$$
+
+Finally, we could calculate the speed values (both $U_{\text{swim}}$ and $U_{\text{over-ground}}$) at which $E_{\text{ratio}}$ is minimized ($U_{opt}$) using the following equation:
+
+$$
+U_{\text{opt}} = min(E_{\text{ratio}}) \quad (15)
+$$
+
+We repeated these analyses for a range of $D_{\text{mig}}$ values from 4000-12000km, informed by our literature review. A schematic of these equations is given in Figure 4.
+
+![Figure 4. Schematic of equations 2-15 used to calculate the stereotyped annual cycle and speed-dependent annual models used to calculate our $U_{opt}$ values.](./figs/EquationSchematic.jpg)
+
+```{r Migration Duration, include=FALSE}
+EnergyModel <- EnergyModel %>% 
+  mutate(MigrationDuration4000Km_Days = 4000*1000/OverGroundSpeeds/86400,
+         MigrationDuration6000Km_Days = 6000*1000/OverGroundSpeeds/86400,
+         MigrationDuration8000Km_Days = 8000*1000/OverGroundSpeeds/86400,
+         MigrationDuration10000Km_Days = 10000*1000/OverGroundSpeeds/86400,
+         MigrationDuration12000Km_Days = 12000*1000/OverGroundSpeeds/86400)
+```
+
+```{r Energetic Cost of Migration, include=FALSE}
+EnergyModel <- EnergyModel %>% 
+  mutate(ECostMigration4000Km_kJ = ECostSwim_kJ_Day*MigrationDuration4000Km_Days,
+         ECostMigration6000Km_kJ = ECostSwim_kJ_Day*MigrationDuration6000Km_Days,
+         ECostMigration8000Km_kJ = ECostSwim_kJ_Day*MigrationDuration8000Km_Days,
+         ECostMigration10000Km_kJ = ECostSwim_kJ_Day*MigrationDuration10000Km_Days,
+         ECostMigration12000Km_kJ = ECostSwim_kJ_Day*MigrationDuration12000Km_Days,
+         BiDirectionalECostMigration4000Km_kJ = ECostMigration4000Km_kJ*2,
+         BiDirectionalECostMigration6000Km_kJ = ECostMigration6000Km_kJ*2,
+         BiDirectionalECostMigration8000Km_kJ = ECostMigration8000Km_kJ*2,
+         BiDirectionalECostMigration10000Km_kJ = ECostMigration10000Km_kJ*2,
+         BiDirectionalECostMigration12000Km_kJ = ECostMigration12000Km_kJ*2)
+```
+
+``` {r Change in Feeding Days / Energy, include=FALSE}
+EnergyModel <- EnergyModel %>% 
+  mutate(ChangeInFeedDays4000Km_Days = MigratoryDays-MigrationDuration4000Km_Days,
+         ChangeInFeedDays6000Km_Days = MigratoryDays-MigrationDuration6000Km_Days,
+         ChangeInFeedDays8000Km_Days = MigratoryDays-MigrationDuration8000Km_Days,
+         ChangeInFeedDays10000Km_Days = MigratoryDays-MigrationDuration10000Km_Days,
+         ChangeInFeedDays12000Km_Days = MigratoryDays-MigrationDuration12000Km_Days,
+         ChangeInENetFeedYear4000Km_kJ = EnetFeedDay_kJ*ChangeInFeedDays4000Km_Days,
+         ChangeInENetFeedYear6000Km_kJ = EnetFeedDay_kJ*ChangeInFeedDays6000Km_Days,
+         ChangeInENetFeedYear8000Km_kJ = EnetFeedDay_kJ*ChangeInFeedDays8000Km_Days,
+         ChangeInENetFeedYear10000Km_kJ = EnetFeedDay_kJ*ChangeInFeedDays10000Km_Days,
+         ChangeInENetFeedYear12000Km_kJ = EnetFeedDay_kJ*ChangeInFeedDays12000Km_Days)
+```
+
+```{r Adjusted Feeding Days / Energy, include=FALSE}
+EnergyModel <- EnergyModel %>% 
+  mutate(FullYearAdjustedFeedDays4000Km_Days = FeedDays+((MigratoryDays-MigrationDuration4000Km_Days)*2),
+         FullYearAdjustedFeedDays6000Km_Days = FeedDays+((MigratoryDays-MigrationDuration6000Km_Days)*2),
+         FullYearAdjustedFeedDays8000Km_Days = FeedDays+((MigratoryDays-MigrationDuration8000Km_Days)*2),
+         FullYearAdjustedFeedDays10000Km_Days = FeedDays+((MigratoryDays-MigrationDuration10000Km_Days)*2),
+         FullYearAdjustedFeedDays12000Km_Days = FeedDays+((MigratoryDays-MigrationDuration12000Km_Days)*2),
+         FullYearAdjustedFeedDays4000Km_Days = 
+           ifelse(FullYearAdjustedFeedDays4000Km_Days < 0, 0, FullYearAdjustedFeedDays4000Km_Days),
+         FullYearAdjustedFeedDays6000Km_Days = 
+           ifelse(FullYearAdjustedFeedDays6000Km_Days < 0, 0, FullYearAdjustedFeedDays6000Km_Days),
+         FullYearAdjustedFeedDays8000Km_Days = 
+           ifelse(FullYearAdjustedFeedDays8000Km_Days < 0, 0, FullYearAdjustedFeedDays8000Km_Days),
+         FullYearAdjustedFeedDays10000Km_Days = 
+           ifelse(FullYearAdjustedFeedDays10000Km_Days < 0, 0, FullYearAdjustedFeedDays10000Km_Days),
+         FullYearAdjustedFeedDays12000Km_Days = 
+           ifelse(FullYearAdjustedFeedDays12000Km_Days < 0, 0, FullYearAdjustedFeedDays12000Km_Days),
+         FullYearAdjustedENetFeedYear4000Km_kJ = EnetFeedDay_kJ*FullYearAdjustedFeedDays4000Km_Days,
+         FullYearAdjustedENetFeedYear6000Km_kJ = EnetFeedDay_kJ*FullYearAdjustedFeedDays6000Km_Days,
+         FullYearAdjustedENetFeedYear8000Km_kJ = EnetFeedDay_kJ*FullYearAdjustedFeedDays8000Km_Days,
+         FullYearAdjustedENetFeedYear10000Km_kJ = EnetFeedDay_kJ*FullYearAdjustedFeedDays10000Km_Days,
+         FullYearAdjustedENetFeedYear12000Km_kJ = EnetFeedDay_kJ*FullYearAdjustedFeedDays12000Km_Days)
+```
+
+```{r Energetic Ratio - Migration Output / Feeding Season Input, include=FALSE}
+EnergyModel <- EnergyModel %>% 
+  mutate(ERatio4000Km = BiDirectionalECostMigration4000Km_kJ/FullYearAdjustedENetFeedYear4000Km_kJ,
+         ERatio6000Km = BiDirectionalECostMigration6000Km_kJ/FullYearAdjustedENetFeedYear6000Km_kJ,
+         ERatio8000Km = BiDirectionalECostMigration8000Km_kJ/FullYearAdjustedENetFeedYear8000Km_kJ,
+         ERatio10000Km = BiDirectionalECostMigration10000Km_kJ/FullYearAdjustedENetFeedYear10000Km_kJ,
+         ERatio12000Km = BiDirectionalECostMigration12000Km_kJ/FullYearAdjustedENetFeedYear12000Km_kJ)
+```
+
+```{r Mimimum Energy Swimming Speed, include=FALSE}
+EnergyModel <- EnergyModel %>% 
+  mutate(MinSpeed4000Km = SwimSpeeds[which(ERatio4000Km == min(ERatio4000Km))[1]],
+         OverGroundMinSpeed4000Km = OverGroundSpeeds[which(ERatio4000Km == min(ERatio4000Km))[1]],
+         MinSpeed6000Km = SwimSpeeds[which(ERatio6000Km == min(ERatio6000Km))[1]],
+         OverGroundMinSpeed6000Km = OverGroundSpeeds[which(ERatio6000Km == min(ERatio6000Km))[1]],
+         MinSpeed8000Km = SwimSpeeds[which(ERatio8000Km == min(ERatio8000Km))[1]],
+         OverGroundMinSpeed8000Km = OverGroundSpeeds[which(ERatio8000Km == min(ERatio8000Km))[1]],
+         MinSpeed10000Km = SwimSpeeds[which(ERatio10000Km == min(ERatio10000Km))[1]],
+         OverGroundMinSpeed10000Km = OverGroundSpeeds[which(ERatio10000Km == min(ERatio10000Km))[1]],
+         MinSpeed12000Km = SwimSpeeds[which(ERatio12000Km == min(ERatio12000Km))[1]],
+         OverGroundMinSpeed12000Km = OverGroundSpeeds[which(ERatio12000Km == min(ERatio12000Km))[1]])
+```
+
+```{r Optimum Speed Dataframe Creation, include=FALSE}
+OptSpeedSummary <- EnergyModel %>% 
+  group_by(Species) %>% 
+  summarize(OptSpeed4000Km = OverGroundSpeeds[which(ERatio4000Km == min(ERatio4000Km))[1]],
+            OptSpeed6000Km = OverGroundSpeeds[which(ERatio6000Km == min(ERatio6000Km))[1]],
+            OptSpeed8000Km = OverGroundSpeeds[which(ERatio8000Km == min(ERatio8000Km))[1]],
+            OptSpeed10000Km = OverGroundSpeeds[which(ERatio10000Km == min(ERatio10000Km))[1]],
+            OptSpeed12000Km = OverGroundSpeeds[which(ERatio12000Km == min(ERatio12000Km))[1]], .groups = 'drop')
+
+OptSpeedSummary <- OptSpeedSummary %>% 
+  pivot_longer(
+    cols = starts_with("OptSpeed"),
+    names_to = "Distance",
+    values_to = "OptSpeed"
+  )
+
+OptSpeedSummary$Distance <- gsub("OptSpeed", "", OptSpeedSummary$Distance)
+OptSpeedSummary$Distance <- gsub("Km", "", OptSpeedSummary$Distance)
+OptSpeedSummary$Distance <- as.numeric(OptSpeedSummary$Distance)
+```
+
+# Results
+
+## Energetic 
+
+## Optimal Migratory Speed
+
+We found that $E_{\text{ratio}}$ produced a U-shaped relationship with $U_{\text{over-ground}}$ across a range of $D_{\text{mig}}$ values from 4000-12000km (Figure 5). Increasing $D_{\text{mig}}$ led to an increase in $E_{\text{mig.year.adj}}$ as a proportion of $E_{\text{feed.year.adj}}$ as well as increasing $U_{\text{opt}}$.
+
+```{r SpeedCurves, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='all', fig.align='center', fig.dim = c(8, 4), fig.cap = "Figure 5. Relationship between $U_{over-ground}$ and $E_{ratio}$. Dotted lines denote the converted values for average $U_{swim}$ for each species in our analysis taken from @goughScalingSwimmingPerformance2019"}
+pSCa <- ggplot(EnergyModel) +
+  geom_vline(xintercept = 2.09/2, linetype = 2, size = 1, colour = "#D55E00") +
+  geom_vline(xintercept = 2.20/2, linetype = 2, size = 1, colour = "#0072B2") +
+  geom_vline(xintercept = 2.35/2, linetype = 2, size = 1, colour = "#009E73") +
+  geom_vline(xintercept = 2.88/2, linetype = 2, size = 1, colour = "#9100B2") +
+  geom_smooth(method = loess, aes(x = OverGroundSpeeds, 
+                                  y = log10(BiDirectionalECostMigration4000Km_kJ/FullYearAdjustedENetFeedYear4000Km_kJ)), colour = "black") +
+  geom_smooth(method = loess, aes(x = OverGroundSpeeds, 
+                                  y = log10(BiDirectionalECostMigration6000Km_kJ/FullYearAdjustedENetFeedYear6000Km_kJ)), colour = "black") +
+  geom_smooth(method = loess, aes(x = OverGroundSpeeds, 
+                                  y = log10(BiDirectionalECostMigration8000Km_kJ/FullYearAdjustedENetFeedYear8000Km_kJ)), colour = "black") +
+  geom_smooth(method = loess, aes(x = OverGroundSpeeds, 
+                                  y = log10(BiDirectionalECostMigration10000Km_kJ/FullYearAdjustedENetFeedYear10000Km_kJ)), colour = "black") +
+  geom_smooth(method = loess, aes(x = OverGroundSpeeds, 
+                                  y = log10(BiDirectionalECostMigration12000Km_kJ/FullYearAdjustedENetFeedYear12000Km_kJ)), colour = "black") +
+  geom_segment(aes(x = OverGroundMinSpeed4000Km[1],
+                   xend = OverGroundMinSpeed4000Km[1],
+                   y = log10(min(BiDirectionalECostMigration4000Km_kJ/FullYearAdjustedENetFeedYear4000Km_kJ))+0.05,
+                   yend = log10(min(BiDirectionalECostMigration4000Km_kJ/FullYearAdjustedENetFeedYear4000Km_kJ))+0.25),
+               size = 2) +
+  geom_segment(aes(x = OverGroundMinSpeed6000Km[1],
+                   xend = OverGroundMinSpeed6000Km[1],
+                   y = log10(min(BiDirectionalECostMigration6000Km_kJ/FullYearAdjustedENetFeedYear6000Km_kJ))+0.05,
+                   yend = log10(min(BiDirectionalECostMigration6000Km_kJ/FullYearAdjustedENetFeedYear6000Km_kJ))+0.25),
+               size = 2) +
+  geom_segment(aes(x = OverGroundMinSpeed8000Km[1],
+                   xend = OverGroundMinSpeed8000Km[1],
+                   y = log10(min(BiDirectionalECostMigration8000Km_kJ/FullYearAdjustedENetFeedYear8000Km_kJ))+0.05,
+                   yend = log10(min(BiDirectionalECostMigration8000Km_kJ/FullYearAdjustedENetFeedYear8000Km_kJ))+0.25),
+               size = 2) +
+  geom_segment(aes(x = OverGroundMinSpeed10000Km[1],
+                   xend = OverGroundMinSpeed10000Km[1],
+                   y = log10(min(BiDirectionalECostMigration10000Km_kJ/FullYearAdjustedENetFeedYear10000Km_kJ))+0.05,
+                   yend = log10(min(BiDirectionalECostMigration10000Km_kJ/FullYearAdjustedENetFeedYear10000Km_kJ))+0.25),
+               size = 2) +
+  geom_segment(aes(x = OverGroundMinSpeed12000Km[1],
+                   xend = OverGroundMinSpeed12000Km[1],
+                   y = log10(min(BiDirectionalECostMigration12000Km_kJ/FullYearAdjustedENetFeedYear12000Km_kJ))+0.05,
+                   yend = log10(min(BiDirectionalECostMigration12000Km_kJ/FullYearAdjustedENetFeedYear12000Km_kJ))+0.25),
+               size = 2) +
+  labs(x = bquote(U[over-ground]),
+       y = bquote(Log[10]* E[ratio])) +
+  coord_cartesian(ylim = c(-1.5,0.5)) +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 24),
+        axis.title = element_text(size = 30),
+        legend.position = "none",
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 18),
+        panel.grid.minor = element_blank())
+
+ggsave("figs/SpeedCurves.pdf", height = 480, width = 960, units = "mm", dpi = 300)
+
+pSCb <- pSCa +
+  theme_classic(base_size = 4) +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 20),
+        legend.position = "none",
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 18),
+        panel.grid.minor = element_blank())
+plot(pSCb)
+
+```
+
+```{r LitModelSpeedCombination, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='all', fig.align='center', fig.dim = c(8, 4), fig.cap = "Figure 6. Relationship $D_{mig}$ and $U_{over-ground}$ for satellite tracks obtained from literature sources. Points denote single uni-directional migratory routes as described in Table 1, with size corresponding to the number of tag deployments averaged together from that migratory route. The dotted gray line denotes the relationship for these points, while the solid black line denotes the relationship between $D_{mig}$ and $U_{over-ground}$ taken from our modeled optimal over-ground speeds shown in Figure 5."}
+pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00")
+
+
+
+pLMSCa <- ggplot(OptSpeedSummary, aes(Distance, OptSpeed)) +
+  geom_smooth(method = lm, colour = "black", fullrange=TRUE) +
+  geom_smooth(data = MigrationDistancesLitAvgs, aes(Migration_Distance_km, Migration_Speed_m_s), method = lm, colour = "darkgrey", linetype = "dashed", fullrange=TRUE) +
+  geom_point(data = MigrationDistancesLit, aes(Migration_Distance_km, Migration_Speed_m_s, color = Species, shape = Direction_of_Travel), alpha = 0.3) +
+  geom_point(data = MigrationDistancesLitAvgs, aes(Migration_Distance_km, Migration_Speed_m_s, fill = Species, size = Number_of_Observations, shape = Direction_of_Travel)) +
+  scale_fill_manual(values = pal) +
+  scale_color_manual(values = pal) +
+  scale_shape_manual(values = c(21,22)) +
+  labs(x = bquote(D[mig]* " (m s"^-1*")"),
+       y = bquote(Log[10]* U[opt]* " (m s"^-1*")")) +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 24),
+        axis.title = element_text(size = 30),
+        legend.position = "none",
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 18),
+        panel.grid.minor = element_blank())
+
+ggsave("figs/LitModelSpeedCombination.pdf", height = 480, width = 960, units = "mm", dpi = 300)
+
+pLMSCb <- pLMSCa +
+  scale_size(range = c(2,8)) +
+  theme_classic(base_size = 4) +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 20),
+        legend.position = "none",
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 18),
+        panel.grid.minor = element_blank())
+plot(pLMSCb)
+```
+
+## EXTRA - Graph of Migration Literature - Speed Over Ground vs. Distance
+
+Plot the speed of movement over ground ($U_{over-ground}$) against the migratory distance ($D_{mig}$) for each satellite track in the literature data (MigrationDistancesLit.rda):
+
+```{r MigrationSpeedDistance, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='all', fig.align='center', fig.dim = c(8, 4)}
+pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00")
+
+eq <- function(x, y) {
+  m <- lm(y ~ x)
+  as.character(
+    as.expression(
+      substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2,
+                list(a = format(coef(m)[1], digits = 4),
+                b = format(coef(m)[2], digits = 4),
+                r2 = format(summary(m)$r.squared, digits = 3)))
+    )
+  )
+}
+
+
+
+pMDLa <- ggplot(MigrationDistancesLit, aes((Migration_Distance_km*2), Migration_Speed_m_s)) +
+  geom_smooth(method = lm, colour = "black") +
+  geom_point(aes(fill = Species, size = 10, shape = Direction_of_Travel)) +
+  geom_text(x = 10000, y = 1.8, label = eq(MigrationDistancesLit$Migration_Distance_km, MigrationDistancesLit$Migration_Speed_m_s), parse = TRUE) +
+  scale_fill_manual(values = pal) +
+  scale_shape_manual(values = c(21,22)) +
+  scale_y_continuous(breaks=seq(0,2.0,0.2)) +
+  labs(x = bquote(D[mig]* " (km)"),
+       y = bquote(U[over-ground]* " (m s"^-1*")")) +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 24),
+        axis.title = element_text(size = 30),
+        legend.position = "none",
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 18),
+        panel.grid.minor = element_blank())
+
+ggsave("figs/MigrationSpeedDistance.pdf", height = 480, width = 960, units = "mm", dpi = 300)
+
+pMDLb <- pMDLa +
+  theme_classic(base_size = 4) +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 20),
+        legend.position = "none",
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 18),
+        panel.grid.minor = element_blank())
+plot(pMDLb)
+```
+
+## EXTRA - Graph of Optimal Speeds for each species at different migration distances
+
+```{r OptimalSpeeds, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='all', fig.align='center', fig.dim = c(8, 4)}
+pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00")
+
+pOSa <- ggplot(OptSpeedSummary, aes(Distance, OptSpeed)) +
+  geom_smooth(method = lm, colour = "black") +
+  geom_point(aes(fill = Species), shape = 21) +
+  geom_text(x = 8000, y = 1.5, label = eq(OptSpeedSummary$Distance, OptSpeedSummary$OptSpeed), parse = TRUE) +
+  scale_fill_manual(values = pal) +
+  scale_size(range = c(5,15)) +
+  labs(x = bquote(D[mig]* " (m s"^-1*")"),
+       y = bquote(Log[10]* U[opt]* " (m s"^-1*")")) +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 24),
+        axis.title = element_text(size = 30),
+        legend.position = "none",
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 18),
+        panel.grid.minor = element_blank())
+
+ggsave("figs/OptimalSpeeds.pdf", height = 480, width = 960, units = "mm", dpi = 300)
+
+pOSb <- pOSa +
+  scale_size(range = c(2,8)) +
+  theme_classic(base_size = 4) +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(size = 20),
+        legend.position = "none",
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 18),
+        panel.grid.minor = element_blank())
+plot(pOSb)
+```
+
+
+
+# Tables
+
+``` {r Literature Review Data, echo=FALSE}
+kable(LitDataForTable, digits = 2, 'pipe')
+```
+
+# References
+
