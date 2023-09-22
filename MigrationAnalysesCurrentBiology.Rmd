@@ -32,6 +32,8 @@ load("data/MigrationDistancesLit.rda")
 MigrationDistancesLit <- MigrationDistancesLit %>% 
   filter(Complete == "Y") 
 
+DistancePercentile <- quantile(MigrationDistancesLit$Migration_Distance_km, probs = 0.90)
+
 LitDataForTable <- MigrationDistancesLit %>% 
   subset(select = c(Species, Source, Migratory_Route_Simple, Direction_of_Travel, Migration_Distance_km, Migration_Duration_days, Migration_Speed_m_s)) %>% 
   rename('Species' = 'Species',
@@ -378,6 +380,9 @@ pMEP <- ggplot(EPercentagesSummary) +
   geom_density(data=filter(MigrationDistancesLit,Species!="Gray"), aes(x = Migration_Distance_km, y = ..scaled..*25, group = Species, fill = Species, alpha = 0.5), adjust = 1.5) +
   geom_smooth(method=loess, aes(x=MigratoryDistance, y=Min_Percent, color=Species)) +
   geom_point(aes(x=MigratoryDistance, y=Min_Percent, color=Species)) +
+  geom_vline(xintercept = DistancePercentile, linetype = "dotted") +
+  coord_cartesian(xlim = c(1500,12500), expand = TRUE) +
+  scale_x_continuous(breaks = seq(2000, 12000, by = 2000)) +
   scale_color_manual(values = pal) +
   scale_fill_manual(values = pal) +
   labs(x = "Migratory Distance (km)",
@@ -394,6 +399,9 @@ pMEP <- ggplot(EPercentagesSummary) +
   geom_smooth(method=loess, aes(color=Species)) +
   geom_point(aes(color=Species)) +
   geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.8) +
+  geom_vline(xintercept = DistancePercentile, linetype = "dotted") +
+  coord_cartesian(xlim = c(1500,12500), expand = TRUE) +
+  scale_x_continuous(breaks = seq(2000, 12000, by = 2000)) +
   scale_color_manual(values = pal) +
   labs(x = "Migratory Distance (km)",
        y = "Migratory Energy Vs. Time Budget") +
@@ -504,9 +512,8 @@ pLMSCa <- ggplot(OptSpeedSummary, aes(Distance, OptSpeed)) +
   geom_smooth(data = MigrationDistancesLitAvgs, aes(Migration_Distance_km, Migration_Speed_m_s), method = lm, colour = "darkgrey", linetype = "dashed", fullrange=TRUE) +
   geom_point(data = MigrationDistancesLit, aes(Migration_Distance_km, Migration_Speed_m_s, color = Species, shape = Direction_of_Travel), alpha = 0.3) +
   geom_point(data = MigrationDistancesLitAvgs, aes(Migration_Distance_km, Migration_Speed_m_s, fill = Species, size = Number_of_Observations, shape = Direction_of_Travel)) +
-  coord_cartesian(
-    xlim = c(1500,12500),
-    expand = TRUE) +
+  coord_cartesian(xlim = c(0,14000), expand = TRUE) +
+  scale_x_continuous(breaks = seq(2000, 12000, by = 2000)) +
   scale_fill_manual(values = pal) +
   scale_color_manual(values = pal) +
   scale_shape_manual(values = c(21,22)) +
