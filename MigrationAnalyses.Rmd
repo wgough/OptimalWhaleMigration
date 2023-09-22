@@ -38,17 +38,17 @@ library(gridExtra)
 
 # Abstract
 
-Long-distance migrations are one of the most energetically challenging behaviors observed within the animal kingdom and are undertaken to find seasonally variable food sources or move between spatially distinct foraging and breeding grounds. Large body sizes, such as those seen in mysticete whales (Mysticeti), allow for migrations across vast distances. Mysticetes must also rely on the energy from a defined feeding season to last them throughout the year, a strategy known as capital breeding. This annual strategy means that maximum migratory distance should be a direct result of the amount of energy gained during the feeding season. Using estimates of foraging and swimming energetic intake and costs for mysticetes of varying body sizes, we estimated the energy gained during a mysticete foraging season as well as the energy subsequently used during migration. For a successful foraging season, the energetic cost of migration relative to intake only amounts to ~20% across body sizes, while a poor foraging year could result in exorbitant migratory costs of ~100% or more. We also found that migratory costs are dependent on total distance, duration, and swimming speed. Combining a theoretical model with satellite tracks of individual whales, we determined that longer migrations are more costly and occur at higher speeds than shorter migrations. In a rapidly changing ocean, even small differences in the distance or duration of a migration could have major impacts on individual fitness. NEEDS TO BE UPDATED
+Long-distance migrations are one of the most energetically challenging behaviors observed within the animal kingdom and are undertaken to find seasonally variable food sources or move between spatially distinct foraging and breeding grounds. Minimizing the cost of transport throughout these migrations can have a large impact on the annual energetic economy of an animal. This is especially true for species that rely on the energy from a defined feeding season to last them throughout the year, a strategy known as capital breeding. Mysticete whales (Mysticeti) are a unique example of a group of capital breeders that perform long-distance migrations across ocean basins, likely necessitating a low cost of transport throughout those journeys. Using estimates of foraging and swimming energetic intake and costs for mysticetes of varying body sizes, we estimated the energy gained during a foraging season as well as the energy lost during migration. We used these values to parameterize stereotypical annual cycles as well as speed-dependent annual cycles that modeled the energetic cost of swimming at various speeds along a migratory route. From this model, we found optimal migratory speeds between 1-2 ms^-1^ for a range of migratory distances. We also determined that longer migrations are more costly and occur at higher speeds than shorter migrations, a result that we were able to validate with satellite tag data from multiple mysticete species. In a rapidly changing ocean, our findings suggest even small differences in the distance or speed of a migration could have major impacts on individual fitness.
 
 # Introduction
 
-Animal migration serves an important role in the re-distribution of nutrients, genetic dispersal across population boundaries, and to maximize fitness across a dynamic landscape [@dingleWhatMigration2007]. Long-distance migrations can span continents and ocean basins and are one of the most energetically extreme behaviors observed within the animal kingdom. Many species transit thousands of kilometers in search of seasonally variable food resources [@blockTrackingApexMarine2011; @lasorteImplicationsMidlatitudeClimate2016; @merkleLargeHerbivoresSurf2016] or to move between spatially distinct foraging and breeding grounds [@kenneyMigrationForagingStrategies2020]. The distances traveled during these journeys are often informed by environmental features [@abrahmsMemoryResourceTracking2019; @blockTrackingApexMarine2011; @oestreichAcousticSignatureReveals2022], but they are also constrained by physiological limitations that must also be overcome through novel adaptation [@weberPhysiologyLongdistanceMigration2009]. 
+Animal migration serves to re-distribute nutrients, increase genetic dispersal across population boundaries, and maximize fitness across a dynamic landscape [@dingleWhatMigration2007]. Long-distance migrations can span continents and ocean basins and are one of the most energetically extreme behaviors observed within the animal kingdom. Many species transit thousands of kilometers in search of seasonally variable food resources [@blockTrackingApexMarine2011; @lasorteImplicationsMidlatitudeClimate2016; @merkleLargeHerbivoresSurf2016] or to move between spatially distinct foraging and breeding grounds [@kenneyMigrationForagingStrategies2020]. The distances traveled during these journeys are often informed by environmental features [@abrahmsMemoryResourceTracking2019; @blockTrackingApexMarine2011; @oestreichAcousticSignatureReveals2022], but they are also constrained by physiological limitations that must be overcome through novel adaptation [@weberPhysiologyLongdistanceMigration2009]. 
 
 A common adaptation that aids long migration is large body size and increased energy storage [@burnsMigratoryLineagesRapidly2020; @heinEnergeticBiomechanicalConstraints2012], with the exception being powered flight (e.g., insects and songbirds) [@alerstamLongdistanceMigrationEvolution2003]. Larger animals have lower mass-specific metabolic rates [@glazier4powerLawVariation2005; @kleiberMetabolicTurnoverRate1975] and costs of transport [@taylorEnergeticsMechanicsTerrestrial1982a; @williamsEvolutionCostEfficient1999], resulting in more efficient locomotion over greater distances. Even as mass-specific costs decrease for larger animals, absolute costs increase and must be accounted for with efficient prey capture strategies [@goldbogenWhyWhalesAre2019; @mcnabComparativeEcologicalEvolutionary1999]. Many of the largest terrestrial species are ruminants that take advantage of seasonal greening for their plant-based diet and a specialized digestive apparatus to increase their energetic surplus [@aikensWavelikePatternsPlant2020; @merkleLargeHerbivoresSurf2016]. Large marine species are unable to utilize such stability and predictability in ocean resources (but see @abrahmsMemoryResourceTracking2019), instead relying on ephemeral prey patches of fish, krill, or copepods [@carrollFlexibleUseDynamic2021; @goldbogenWhyWhalesAre2019].
 
-Many of the largest marine animals, including mysticete (baleen) whales (Mysticeti), whale sharks (Rhincodon typus), and oceanic manta rays (Mobula birostris), efficiently exploit small, abundant prey species (e.g., schooling fish and crustaceans) by filter feeding on large aggregations [@goldbogenWhyWhalesAre2019; @mottaFeedingAnatomyFilterfeeding2010; @paig-tranFilterPadsFiltration2013]. These large body sizes allow many species to undertake months-long migrations over tens of thousands of kilometers [@corkeronWhyBaleenWhales1999; @guzmanLongestRecordedTransPacific2018; @kenneyMigrationForagingStrategies2020]. Unlike terrestrial ungulates that forage during the migration, mysticetes are capital breeders, meaning they have a defined feeding season (spring and summer months) and exhibit relatively little feeding behavior outside the feeding season [@lockyerGrowthEnergyBudgets1981]. Thus, mysticetes need to live off these reserves for the rest of the year [@drentPrudentParentEnergetic1980; @jonssonCapitalIncomeBreeding1997; @stephensCapitalBreedingIncome2009]. This annual strategy means that maximum migratory distance should be a direct result of the amount of energy gained during the feeding season. 
+Many of the largest marine animals, including mysticete (baleen) whales (Mysticeti), whale sharks (Rhincodon typus), and oceanic manta rays (Mobula birostris), efficiently exploit small, abundant prey species (e.g., schooling fish and crustaceans) by filter feeding on large aggregations [@goldbogenWhyWhalesAre2019; @mottaFeedingAnatomyFilterfeeding2010; @paig-tranFilterPadsFiltration2013]. Large body sizes allow these species to undertake months-long migrations over tens of thousands of kilometers [@corkeronWhyBaleenWhales1999; @guzmanLongestRecordedTransPacific2018; @kenneyMigrationForagingStrategies2020]. Unlike terrestrial ungulates that forage during the migration, mysticetes are capital breeders, meaning they have a defined feeding season (spring and summer months) and exhibit relatively little feeding behavior outside the feeding season [@lockyerGrowthEnergyBudgets1981]. Thus, mysticetes need to live off these reserves for the rest of the year [@drentPrudentParentEnergetic1980; @jonssonCapitalIncomeBreeding1997; @stephensCapitalBreedingIncome2009]. Given the large energetic costs that are thought to be associated with competitive mating (for males) and reproduction (for females) (citations), it is likely that these species would benefit from minimizing their cost of swimming during migration (). 
 
-Recent studies on several mysticete species combining biologging tags with UAS morphometrics and hydrodynamic physical modeling have produced high-resolution estimates of energetic intake and costs for both foraging and swimming [@goldbogenWhyWhalesAre2019; @savocaBaleenWhalePrey2021]. Studies using satellite tags have also produced estimates of mysticete bi-directional migration durations ranging from ~60-180 days and distances ranging from ~5000-20000 km [@felixSatelliteTrackingSighting2014; @kettemerRoundtripMigrationEnergy2022; @mateMovementsNorthPacific1999; @mateCriticallyEndangeredWestern2015; @modestFirstDescriptionMigratory2021; @riekkolaEnvironmentalDriversHumpback2019]. Using these comprehensive datasets, we estimate the net energy gained during the foraging season as well as the energy subsequently used during migration. We hypothesize that due to the bulk filter feeding strategy employed by mysticetes that has shown to be highly energetically efficient, migration will not be constrained by energy acquisition during the foragins season, but rather by timing and the potential opportunity costs of lost foraging periods. As an extension, we predict that whales that undertake longer migrations will do so at faster swimming speeds despite the increased energetic cost of doing so. As a validation, we will compare our modeled predictions against migration distances and swimming speeds taken from the real-world satellite tag dataset.
+Recent studies on several mysticete species combining biologging tags with UAS morphometrics and hydrodynamic physical modeling have produced high-resolution estimates of energetic intake and costs for both foraging and swimming [@goldbogenWhyWhalesAre2019; @savocaBaleenWhalePrey2021]. Studies using satellite tags have also produced estimates of mysticete bi-directional migration durations ranging from ~60-180 days and distances ranging from ~5000-20000 km [@felixSatelliteTrackingSighting2014; @kettemerRoundtripMigrationEnergy2022; @mateMovementsNorthPacific1999; @mateCriticallyEndangeredWestern2015; @modestFirstDescriptionMigratory2021; @riekkolaEnvironmentalDriversHumpback2019]. Using these comprehensive datasets, we can estimate the net energy gained during a foraging season as well as the energy used during migration. We can then model the cost associated with migratory routes of different distances as well as the costs associated with migrating too fast or too slow along those routes. The feeding and breeding seasons for many species are marked by constraints (seasonal prey availability, length of gestation and weaning, etc.), suggesting that whales that undertake longer-distance migrations might need to arrive at the feeding or breeding ground at the same time as animals making shorter-distance migrations. As a result, we hypothesize that the animals performing the longer-distance migrations will do so at faster swimming speeds despite the increased energetic cost of doing so. In a rapidly changing ocean where prey resources are often ephemeral in time and space, the movement and energetic choices of extreme capital breeders such as mysticete whales could provide useful insight into the health of the marine environment.
 
 ![Figure 1. Schematic of a humpback whale annual cycle with a generic migratory route highlighted](./figs/AnnualCycleSchematic.jpg)
 
@@ -56,7 +56,7 @@ Recent studies on several mysticete species combining biologging tags with UAS m
 
 ## Species
 
-We included four species in our energetic analyses: blue (_Balaenoptera musculus_), fin (_Balaenoptera physalus_), humpback (_Megaptera novaeangliae_), and Antarctic minke (_Balaenoptera bonaerensis_). Informed by morphological [@kahane-rapportAllometricScalingMorphology2018] and UAV datasets [@goughScalingOscillatoryKinematics2021; @goughFastFuriousEnergetic2022], we chose a five-meter range of body lengths ($TL_{\text{body}}$) for each species. In a review of migratory track satellite tag data, we found data for the four previously-mentioned species in addition to sei (_Balaenoptera borealis_) and gray whale (_Eschrichtius robustus_).
+We included four species in our energetic analyses: blue (_Balaenoptera musculus_), fin (_Balaenoptera physalus_), humpback (_Megaptera novaeangliae_), and Antarctic minke (_Balaenoptera bonaerensis_). Informed by morphological [@kahane-rapportAllometricScalingMorphology2018] and UAV datasets [@goughScalingOscillatoryKinematics2021; @goughFastFuriousEnergetic2022], we chose a five-meter range of body lengths ($TL_{\text{body}}$) for each species. In a review of migratory track satellite tag data, we found data for the four previously-mentioned species in addition to the gray whale (_Eschrichtius robustus_).
 
 ## Satellite Tag Data
 
@@ -560,11 +560,7 @@ OptSpeedSummary$Distance <- gsub("Km", "", OptSpeedSummary$Distance)
 OptSpeedSummary$Distance <- as.numeric(OptSpeedSummary$Distance)
 ```
 
-# Results
-
-## Energetic 
-
-## Optimal Migratory Speed
+# Results (In Progress)
 
 We found that $E_{\text{ratio}}$ produced a U-shaped relationship with $U_{\text{over-ground}}$ across a range of $D_{\text{mig}}$ values from 4000-12000km (Figure 5). Increasing $D_{\text{mig}}$ led to an increase in $E_{\text{mig.year.adj}}$ as a proportion of $E_{\text{feed.year.adj}}$ as well as increasing $U_{\text{opt}}$.
 
@@ -671,9 +667,15 @@ pLMSCb <- pLMSCa +
 plot(pLMSCb)
 ```
 
-## EXTRA - Graph of Migration Literature - Speed Over Ground vs. Distance
+# Discussion (In Progress)
 
-Plot the speed of movement over ground ($U_{over-ground}$) against the migratory distance ($D_{mig}$) for each satellite track in the literature data (MigrationDistancesLit.rda):
+# Tables
+
+``` {r Literature Review Data, echo=FALSE}
+kable(LitDataForTable, digits = 2, 'pipe')
+```
+
+## EXTRA FIGURES - Graph of Migration Literature - Speed Over Ground vs. Distance
 
 ```{r MigrationSpeedDistance, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='all', fig.align='center', fig.dim = c(8, 4)}
 pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00")
@@ -722,8 +724,6 @@ pMDLb <- pMDLa +
 plot(pMDLb)
 ```
 
-## EXTRA - Graph of Optimal Speeds for each species at different migration distances
-
 ```{r OptimalSpeeds, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='all', fig.align='center', fig.dim = c(8, 4)}
 pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00")
 
@@ -757,13 +757,7 @@ pOSb <- pOSa +
 plot(pOSb)
 ```
 
-
-
-# Tables
-
-``` {r Literature Review Data, echo=FALSE}
-kable(LitDataForTable, digits = 2, 'pipe')
-```
-
 # References
+
+
 
