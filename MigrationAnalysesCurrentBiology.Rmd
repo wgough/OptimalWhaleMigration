@@ -24,6 +24,8 @@ library(rbbt)
 library(ggspatial)
 library(grid)
 library(gridExtra)
+library(pdftools)
+library(magick)
 ```
 
 ```{r Literature Review Import, echo=FALSE}
@@ -32,7 +34,10 @@ load("data/MigrationDistancesLit.rda")
 MigrationDistancesLit <- MigrationDistancesLit %>% 
   filter(Complete == "Y") 
 
-DistancePercentile <- quantile(MigrationDistancesLit$Migration_Distance_km, probs = 0.90)
+DistancePercentile <- MigrationDistancesLit %>% 
+  filter(Species %in% c("Humpback", "Blue")) %>% 
+  summarise(Percentile95 = quantile(Migration_Distance_km, probs = 0.95)) %>% 
+  pull(Percentile95)
 
 LitDataForTable <- MigrationDistancesLit %>% 
   subset(select = c(Species, Source, Migratory_Route_Simple, Direction_of_Travel, Migration_Distance_km, Migration_Duration_days, Migration_Speed_m_s)) %>% 
@@ -357,67 +362,133 @@ AverageLitHumpBlueEnergy <- MigrationDistancesLit %>%
 
 # Summary
 
-Long-distance migrations are one of the most energetically challenging behaviors observed within the animal kingdom and are undertaken to find seasonally variable food sources or move between spatially distinct foraging and breeding grounds. Minimizing the cost of transport throughout these migrations can have a large impact on the annual energetic economy of an animal. This is especially true for species that rely on the energy from a defined feeding season to last them throughout the year, a strategy known as capital breeding. Mysticete whales (Mysticeti) are a unique example of a group of capital breeders that perform long-distance migrations across ocean basins, likely necessitating a low cost of transport throughout those journeys. Using estimates of foraging and swimming energetic intake and costs for mysticetes of varying body sizes, we estimated the energy gained during a foraging season as well as the energy lost during migration. We used these values to parameterize stereotypical annual cycles as well as speed-dependent annual cycles that modeled the energetic cost of swimming at various speeds along a migratory route. From this model, we found optimal migratory speeds between 1-2 ms^-1^ for a range of migratory distances. We also determined that longer migrations are more costly and occur at higher speeds than shorter migrations, a result that we were able to validate with satellite tag data from multiple mysticete species. In a rapidly changing ocean, our findings suggest even small differences in the distance or speed of a migration could have major impacts on individual fitness.
+Long-distance migrations are one of the most energetically challenging behaviors within the animal kingdom and are undertaken to track seasonally variable food sources or move between spatially distinct foraging and breeding grounds. Minimizing the cost of transport throughout these migrations can have a large impact on an animal’s annual energetic economy. This is especially true for capital breeders, species that rely on the energy from a defined feeding season to last them throughout the year. Mysticete whales (Mysticeti) are a group of capital breeders that migrate across ocean basins, likely necessitating a low cost of transport throughout those journeys. Using estimates of foraging intake and swimming costs for mysticetes of varying body sizes, we modeled the net energy gained during a foraging season as well as the energy lost during migration. We then evaluated the trade-off between a longer foraging season with faster migration speeds versus a shorter forging season with slower migration speeds using energetics as a common currency. From this model, we found energetically optimal migratory speeds between 1-2 ms-1 for a range of migratory distances. We also determined that longer migrations occur at higher speeds than shorter migrations. This result was validated with satellite tag data from 68 deployments on four mysticete species across 11 migratory routes. Our findings suggest even small differences in the distance or speed of a migration could have major impacts on individual fitness in a rapidly changing ocean.
 
 # Results
 
-Animal migration serves to re-distribute nutrients, increase genetic dispersal across population boundaries, and maximize fitness across a dynamic landscape [@dingleWhatMigration2007]. Many species transit thousands of kilometers in search of seasonally variable food resources [@blockTrackingApexMarine2011; @lasorteImplicationsMidlatitudeClimate2016; @merkleLargeHerbivoresSurf2016] or to move between spatially distinct foraging and breeding grounds [@kenneyMigrationForagingStrategies2020]. The energetic and fitness implications of these long-distance migrations has historically been poorly understood, especially in the marine environment where species may be cryptic or widely distributed in remote locations (citations). The advent of biologging technologies is beginning to change that picture, giving us insights into the fine-scale behavior and large-scale movements of individuals and species. One group that has benefited extensively from these new technologies is cetaceans, notably large baleen whales (Mysticeti) that are known to migrate across ocean basins (citations). 
+Many species transit thousands of kilometers to access seasonally variable food resources (Block et al. 2011; La Sorte et al. 2016; Merkle et al. 2016; Abrahms et al. 2019) or to move between spatially distinct foraging and breeding grounds (Kenney, Mayo, and Winn 2001). The energetic and fitness implications of these long-distance migrations remain poorly understood, especially in the marine environment where species may be cryptic or widely distributed in remote locations (Luo et al. 2015; Mingozzi et al. 2016; Frisk et al. 2019). The advent of biologging technologies is giving us insights into the fine-scale behavior and broad-scale movements of individuals and species (Jouventin & Weimerskirch, 1990; Mate et al. 1998; Block et al. 2001; Eckert 2006; Shaffer et al. 2006). One group that has benefited extensively from these new technologies is cetaceans, notably large baleen whales (Mysticeti) that are known to migrate across ocean basins, yet live on an energetic knife’s edge (Goldbogen et al. 2019 Science Paper).
 
-Unlike terrestrial ungulates that forage during migration, baleen whales are capital breeders, meaning they have a defined feeding season (spring and summer months) and exhibit relatively little feeding behavior outside the feeding season [@lockyerGrowthEnergyBudgets1981]. Thus, baleen whales need to live off their reserves for the rest of the year [@drentPrudentParentEnergetic1980; @jonssonCapitalIncomeBreeding1997; @stephensCapitalBreedingIncome2009]. Given the large energetic costs that are thought to be associated with competitive mating (for males) and reproduction (for females) (citations), these species likely benefit from minimizing the cost of swimming throughout migration (citations). On the other hand, these species rely on ephemeral prey patches of fish, krill, and copepods [@carrollFlexibleUseDynamic2021; @goldbogenWhyWhalesAre2019] that may only exist during certain times of the year (citations), setting up a potential scenario in which individuals must weight the higher costs of a faster migration against the potential energetic gains of a longer feeding season. Here we attempt to quantify this energetic tradeoff using a combination of high-resolution and satellite tag datasets.
+Unlike many migratory species (e.g. birds, bats, ungulates) that forage during migration (Hedenstrom & Alerstam, 1997; McGuire et al. 2011; Sawyer & Kauffman, 2011), baleen whales are capital breeders, meaning they have a defined feeding season (spring and summer months) and exhibit relatively little feeding behavior outside that feeding season (Lockyer 2007; Horton et al. 2022; Evans & Bearhop 2022). Thus, baleen whales need to live off their reserves for the rest of the year (Drent and Daan 1980; Jönsson 1997; Stephens et al. 2009). Given the large energetic costs that are thought to be associated with competitive mating (for males) and reproduction (for females) (Christiansen et al. 2016; Villegas-Amtmann et al. 2017; Pirotta et al. 2018), these species likely benefit from minimizing the cost of swimming throughout migration (Braithwaite et al. 2015; Gough et al. 2019). On the other hand, these species rely on ephemeral high-density patches of fish, krill, and copepods (Carroll et al. 2021; Goldbogen et al. 2019) that are only accessible for foraging during certain times of the year (Szabo & Batchelder 2014; McHuron et al. 2022; Oestreich et al. 2022), setting up a potential scenario in which individuals must weigh the higher costs of a faster migration against the potential energetic gains of a longer feeding season. Here we quantify this energetic tradeoff using a combination of short-term (hours to days) high-resolution and long-term (weeks to months) satellite tag datasets.
 
-![Figure 1. Schematic of a humpback whale annual cycle with a generic migratory route highlighted](./figs/AnnualCycleSchematic.jpg)
+![Figure 1. Schematic of a humpback whale annual cycle with a generic equatorward migratory route highlighted](./figs/AnnualCycleSchematic.jpg)
 
 ## Annual Energetic Economy
 
-Recent studies on several baleen whale species combining biologging tags with UAS morphometrics and hydrodynamic physical modeling have produced high-resolution estimates of energetic intake and costs for both foraging and swimming [@goldbogenWhyWhalesAre2019; @savocaBaleenWhalePrey2021]. Using these estimates, we quantified the speed-dependent energetic economy of a feeding season (Fig 2A) and round-trip migration (Fig 2B) for four baleen whale species: blue (_Balaenoptera musculus_), fin (_Balaenoptera physalus_), humpback (_Megaptera novaeangliae_), and Antarctic minke (_Balaenoptera bonaerensis_). On a mass-specific basis, the Antarctic minke whale showed the most positive energetic economy from the foraging season, counter to previous studies [@goldbogenWhyWhalesAre2019; @goughFastFuriousEnergetic2022] suggesting that larger animals have the most positive energetic economy. The Antarctic minke also displayed the highest mass-specific migratory costs, in line with previous studies showing that mass-specific cost of transport decreases with increasing body size (citations). Combining the cost of migration from the net energy gain from a feeding season resulted in an estimate of the remaining energy that could be available for mating and reproduction during the breeding season (Fig 2C). The low cost of migration relative to feeding season intake results in higher mass-specific residual energy available to the Antarctic minke whale relative to larger species. For all species, the net energetic intake from the feeding season and the energetic cost of migration were heavily impacted by the migratory distance and swimming speed (need statistical model outputs). Summary energetic values for each species are given in Table X (need to finish).
+Recent studies on several baleen whale species combining biologging tags with UAS morphometrics and hydrodynamic physical modeling have produced high-resolution estimates of energetic intake and costs for both foraging and swimming [@goldbogenWhyWhalesAre2019; @savocaBaleenWhalePrey2021]. Using those estimates, we quantified the relationship between migratory distance and the percentage of annual energetic budget devoted to migration (Figure 2A). Of the four species in our analysis, cost per km of migration increased the fastest in humpback whales and slowest in Antarctic minke whales. From satellite tracks of migrating humpback and blue whales (n=65), we found the 95th percentile of migratory distances to be 8956km, corresponding to annual migratory percentages of less than 25%. This distance also closely aligned with the point at which the percentage of the annual energy budget devoted to migration equaled the percentage of the annual cycle (in time) devoted to migration (Figure 2B). At higher migratory distances, costs increased rapidly and the percentage of annual energy outstripped the percentage of the annual budget devoted to migration.
 
-Using our energetic estimates for the feeding season and migration, we calculated the percentage of annual energy consumed during migration. Figure 3 displays the minimum percentages for each species across the range of migratory distances in our model (2000-12000km), with each species exhibiting an increase in relative migratory cost as a function of distance. Of the four species, the relationship for the humpback whale increased the fastest.
-
-``` {r MigrationEnergeticPercentages, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='all', fig.align='center', fig.dim = c(8, 4), fig.cap = "Figure 3. Migratory distance versus the minimum estimated migratory energy usage as a percentage of feeding season intake."}
+``` {r MigrationEnergeticPercentages, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='all', fig.align='center', fig.dim = c(8, 10), fig.cap = "Figure 3. Relationship between migratory distance and the percentage of annual energy and time used for migration. Values along each curve in A) correspond to the minimal energy usage as a percentage of annual energy intake for an animal performing a migration of the given distance. Density plots correspond to the migratory distances for humpback (orange; n=24) and blue (blue; n=41) whales taken from our satellite tag dataset. The vertical dotted line denotes the 95th percentile for these density plots combined (8956km). Values along each curve in B) correspond to the log-transformed ratio of annual energy and time percentages devoted to migration for a given distance."}
 pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00")
 
-pMEP <- ggplot(EPercentagesSummary) +
-  geom_density(data=filter(MigrationDistancesLit,Species!="Gray"), aes(x = Migration_Distance_km, y = ..scaled..*25, group = Species, fill = Species, alpha = 0.5), adjust = 1.5) +
-  geom_smooth(method=loess, aes(x=MigratoryDistance, y=Min_Percent, color=Species)) +
-  geom_point(aes(x=MigratoryDistance, y=Min_Percent, color=Species)) +
-  geom_vline(xintercept = DistancePercentile, linetype = "dotted") +
+pMEPa <- ggplot(EPercentagesSummary) +
+  geom_density(data=filter(MigrationDistancesLit,Species!="Gray"), aes(x = Migration_Distance_km, y = ..scaled..*25, group = Species, fill = Species, alpha = 0.5), adjust = 1.5, size = 3) +
+  geom_smooth(method=loess, aes(x=MigratoryDistance, y=Min_Percent, color=Species), size = 3) +
+  geom_point(aes(x=MigratoryDistance, y=Min_Percent, color=Species), size = 6) +
+  geom_vline(xintercept = DistancePercentile, linetype = "dotted", size = 3) +
+  annotate("text", x=1200, y=65, label="A", size = 24) +
+  annotate("text", x=8800, y=55, label="95% Percentile", size = 14, angle="90") +
   coord_cartesian(xlim = c(1500,12500), expand = TRUE) +
   scale_x_continuous(breaks = seq(2000, 12000, by = 2000)) +
   scale_color_manual(values = pal) +
   scale_fill_manual(values = pal) +
   labs(x = "Migratory Distance (km)",
-       y = "Migratory Energy Use (%)") +
+       y = "Migratory Cost (%)") +
+  guides(alpha = "none", 
+         fill = "none",
+         color = guide_legend(keywidth = 5, 
+                              keyheight = 4, 
+                              override.aes=list(fill=NA), 
+                              title = "Species")) +
   theme_classic(base_size = 8) +
-  theme(axis.text = element_text(size = 10),
+  theme(axis.text = element_text(size = 48),
         axis.text.x = element_blank(),
-        axis.title.y = element_text(size = 10, margin = margin(t = 0, r = 18, b = 0, l = 0)),
+        axis.title.y = element_text(size = 60, margin = margin(t = 0, r = 100, b = 0, l = 0)),
         axis.title.x = element_blank(),
-        legend.position = "none",
+        legend.position = c(0.1, 0.6),
+        legend.title = element_text(size = 52),
+        legend.text = element_text(size = 48),
         panel.grid.minor = element_blank())
 
- pMER <- ggplot(PercentagesRatioSummary, aes(x=MigratoryDistance, y=log10(Min_Ratio))) +
-  geom_smooth(method=loess, aes(color=Species)) +
-  geom_point(aes(color=Species)) +
-  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.8) +
-  geom_vline(xintercept = DistancePercentile, linetype = "dotted") +
+ pMERa <- ggplot(PercentagesRatioSummary, aes(x=MigratoryDistance, y=log10(Min_Ratio))) +
+  geom_smooth(method=loess, aes(color=Species), size = 3) +
+  geom_point(aes(color=Species), size = 6) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.8, size = 3) +
+  geom_vline(xintercept = DistancePercentile, linetype = "dotted", size = 3) +
+  annotate("text", x=1200, y=0.45, label="B", size = 24) +
+  annotate("text", x=3100, y=0.08, label="% of Annual Energy > % of Annual Time", size = 16) +
+  annotate("text", x=3100, y=-0.08, label="% of Annual Energy < % of Annual Time", size = 16) +
   coord_cartesian(xlim = c(1500,12500), expand = TRUE) +
   scale_x_continuous(breaks = seq(2000, 12000, by = 2000)) +
   scale_color_manual(values = pal) +
   labs(x = "Migratory Distance (km)",
-       y = "Migratory Energy Vs. Time Budget") +
+       y = bquote(Log[10]* " Migratory Cost / Duration")) +
   theme_classic(base_size = 8) +
-  theme(axis.text = element_text(size = 10),
-        axis.title.y = element_text(size = 10, margin = margin(t = 0, r = 6, b = 0, l = 0)),
-        axis.title.x = element_text(size = 10),
+  theme(axis.text = element_text(size = 48),
+        axis.title.y = element_text(size = 60, margin = margin(t = 0, r = 20, b = 0, l = 0)),
+        axis.title.x = element_text(size = 60, margin = margin(t = 20, r = 0, b = 0, l = 0)),
         legend.position = "none",
         panel.grid.minor = element_blank())
 
-cowplot::plot_grid(pMEP, pMER,
-                   nrow = 2,
-                   ncol = 1,
-                   align = "hv",
-                   axis = "bl",
-                   labels = NULL)
+pMEa <- cowplot::plot_grid(pMEPa, pMERa,
+                           nrow = 2,
+                           ncol = 1,
+                           align = "hv",
+                           axis = "bl",
+                           labels = NULL)
+
+ggsave("figs/MigrationPercentages.pdf", height = 720, width = 960, units = "mm", dpi = 300)
+
+convert_pdf_to_png <- function(pdf_file, png_file, dpi = 300) {
+  image <- image_read_pdf(pdf_file)
+  image_write(image, path = png_file, density = dpi)
+}
+
+convert_pdf_to_png("figs/MigrationPercentages.pdf", "figs/MigrationPercentages.png", dpi = 300)
+
+pMEPb <- ggplot(EPercentagesSummary) +
+  geom_density(data=filter(MigrationDistancesLit,Species!="Gray"), aes(x = Migration_Distance_km, y = ..scaled..*25, group = Species, fill = Species, alpha = 0.5), adjust = 1.5) +
+  geom_smooth(method=loess, aes(x=MigratoryDistance, y=Min_Percent, color=Species)) +
+  geom_point(aes(x=MigratoryDistance, y=Min_Percent, color=Species)) +
+  geom_vline(xintercept = DistancePercentile, linetype = "dotted") +
+  annotate("text", x=1200, y=65, label="A", size = 6) +
+  coord_cartesian(xlim = c(1500,12500), expand = TRUE) +
+  scale_x_continuous(breaks = seq(2000, 12000, by = 2000)) +
+  scale_color_manual(values = pal) +
+  scale_fill_manual(values = pal) +
+  labs(x = "Migratory Distance (km)",
+       y = "Migratory Cost (%)") +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 8),
+        axis.text.x = element_blank(),
+        axis.title.y = element_text(size = 12, margin = margin(t = 0, r = 18, b = 0, l = 0)),
+        axis.title.x = element_blank(),
+        legend.position = "none",
+        panel.grid.minor = element_blank())
+
+pMERb <- ggplot(PercentagesRatioSummary, aes(x=MigratoryDistance, y=log10(Min_Ratio))) +
+  geom_smooth(method=loess, aes(color=Species)) +
+  geom_point(aes(color=Species)) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.8) +
+  geom_vline(xintercept = DistancePercentile, linetype = "dotted") +
+  annotate("text", x=1200, y=0.45, label="B", size = 6) +
+  coord_cartesian(xlim = c(1500,12500), expand = TRUE) +
+  scale_x_continuous(breaks = seq(2000, 12000, by = 2000)) +
+  scale_color_manual(values = pal) +
+  labs(x = "Migratory Distance (km)",
+       y = bquote(Log[10]* " Migratory Cost / Duration")) +
+  theme_classic(base_size = 8) +
+  theme(axis.text = element_text(size = 8),
+        axis.title.y = element_text(size = 12, margin = margin(t = 0, r = 6, b = 0, l = 0)),
+        axis.title.x = element_text(size = 12, margin = margin(t = 6, r = 0, b = 0, l = 0)),
+        legend.position = "none",
+        panel.grid.minor = element_blank())
+
+pMEb <- cowplot::plot_grid(pMEPb, pMERb,
+                           nrow = 2,
+                           ncol = 1,
+                           align = "hv",
+                           axis = "bl",
+                           labels = NULL)
+plot(pMEb)
 
 ```
 
@@ -578,7 +649,7 @@ Our study is the first to calculate the energetics of mysticete migration across
 
 # Materials & Methods
 
-Informed by morphological [@kahane-rapportAllometricScalingMorphology2018] and UAV datasets [@goughScalingOscillatoryKinematics2021; @goughFastFuriousEnergetic2022], we chose a five-meter range of body lengths ($TL_{\text{body}}$) for each species.
+Informed by morphological [@kahane-rapportAllometricScalingMorphology2018] and UAV datasets [@goughScalingOscillatoryKinematics2021; @goughFastFuriousEnergetic2022], we chose a five-meter range of body lengths ($TL_{\text{body}}$) for four baleen whale species: blue (_Balaenoptera musculus_), fin (_Balaenoptera physalus_), humpback (_Megaptera novaeangliae_), and Antarctic minke (_Balaenoptera bonaerensis_).
 
 ## Satellite Tag Data
 
@@ -1107,4 +1178,3 @@ plot(pAEF)
 ```
 
 # References
-
