@@ -853,7 +853,7 @@ kable(LitDataForTable, digits = 2, 'pipe',
 
 ## Supplemental Figures
 
-```{r Figure S2 - LitSpeedCurves, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 4)}
+```{r Figure S3 - LitSpeedCurves, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 4)}
 pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00")
 
 pLSC <- ggplot(LitHumpBlueEnergy) +
@@ -884,7 +884,7 @@ ggsave("figs/Extras/LitSpeedCurves.pdf", height = 720, width = 960, units = "mm"
 convert_pdf_to_png("figs/Extras/LitSpeedCurves.pdf", "figs/Extras/LitSpeedCurves.png", dpi = 300)
 ```
 
-![Figure S2. Relationship between over-ground swimming speed and the energetic ratio between annual migration costs and annual feeding season energy intake for migration tracks of humpback and blue whales. Values were obtained from the literature and detailed in Table S1. (@kettemer_etal22; @mate_etal15; @modest_etal21; @palacios_etal19;@palacios_etal20; @riekkola_etal20)](./figs/Extras/LitSpeedCurves.png)
+![Figure S3. Relationship between over-ground swimming speed and the energetic ratio between annual migration costs and annual feeding season energy intake for migration tracks of humpback and blue whales. Values were obtained from the literature and detailed in Table S1. (@kettemer_etal22; @mate_etal15; @modest_etal21; @palacios_etal19;@palacios_etal20; @riekkola_etal20)](./figs/Extras/LitSpeedCurves.png)
 
 ```{r EXTRA FIGURE - NOT INCLUDED - BlueWhaleSpeedsMapped, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 4), fig.cap = "Figure S1. Data from two multi-sensor blue whale tag deployments used to calculate a conversion factor between over-ground speed and swimming speed. The map on the left shows the gps tracks for each whale during the period of migration swimming. The graphs on the right show the time-depth traces for each whale during the same period of migration swimming."}
 
