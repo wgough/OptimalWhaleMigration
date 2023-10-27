@@ -1022,7 +1022,7 @@ Conceptualization - W.T.G, M.F.C, M.S.S., J.A.G.; Methodology, W.T.G., M.F.C., J
 
 # Acknowledgements
 
-W.T.G. was supported by the National Science Foundation (NSF), the Office of Naval Research (ONR), the United States Pacific Fleet (FLEET), and the National Oceanographic and Atmospheric Administration (NOAA) during the development of this work. We would like to thank the members of the Marine Mammal Research Program at the University of Hawaii at Manoa, the members of the Goldbogen Lab at Stanford University's Hopkins Marine Station, and Dr. Frank Fish for their support and advice on the figures and writing.
+W.T.G. was financially supported by the Office of Naval Research (ONR) (N000141912455; N000142212721) and the United States Pacific Fleet (FLEET) (N62470-20-D0016) during the development of this work. We would like to thank the members of the Marine Mammal Research Program at the University of Hawaii at Manoa, the members of the Goldbogen Lab at Stanford University's Hopkins Marine Station, and Dr. Frank Fish for their support and advice on the figures and writing.
 
 # Declaration of Interests
 
