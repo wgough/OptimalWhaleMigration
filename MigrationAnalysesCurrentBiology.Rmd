@@ -1,9 +1,8 @@
 ---
-title: " Longer Migrations Require Higher Speeds to Maintain Optimal Year-round Energetics"
-author: "William T. Gough, Max F. Czapanskiy, Daniel M. Palacios, Matthew S. Savoca, James Fahlbusch, William K. Oestreich, Elliott L. Hazen, Lars Bejder, John Calambokidis, Jeremy A. Goldbogen"
-date: 'October 23, 2023'
+title: "Baleen Whale Migration Speeds Optimize Year-round Energetic Budgets"
+author: William T. Gough$^{1,2,10}$, Max F. Czapanskiy$^{1,3,4}$, Daniel M. Palacios$^{5,6}$, Matthew S. Savoca$^{1}$, James Fahlbusch$^{1,7}$, William K. Oestreich$^{1,8}$, Elliott L. Hazen$^{9}$, Lars Bejder$^{2}$, John Calambokidis$^{7}$, Jeremy A. Goldbogen$^{1}$
 bibliography: ZoteroLibraryGough.json
-#csl: current-science.csl
+csl: current-science.csl
 output:
   word_document: default
   pdf_document: default
@@ -40,6 +39,12 @@ DistancePercentile <- MigrationDistancesLit %>%
   filter(Species %in% c("Humpback", "Blue")) %>% 
   summarise(Percentile95 = quantile(Migration_Distance_km, probs = 0.95)) %>% 
   pull(Percentile95)
+
+SpeedAvgsAndSEs <- MigrationDistancesLit %>% 
+  filter(Species %in% c("Humpback", "Blue")) %>% 
+  group_by(Species) %>%
+  summarise(AverageSpeed = mean(Migration_Speed_m_s),
+            SpeedSE = sd(Migration_Speed_m_s) / sqrt(n()))
 
 MigrationDistancesLitAvgs <- MigrationDistancesLit %>% 
   filter(Complete == "Y") %>% 
@@ -492,13 +497,13 @@ Linear_Relationship2 <- function(x, y) {
 }
 ```
 
-``` {r Figure 2 - MigrationEnergeticPercentages, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 8), fig.cap = "Figure 2. Relationship between migration distance and the percentage of annual energy used for migration. Curves correspond to the minimal energy used for migration (annual total) as a percentage of annual net feeding season energy intake for an animal performing migrations of a given uni-directional distance. Probability density plots correspond to the migration distances for humpback (orange; n=24) and blue (blue; n=41) whales taken from our satellite tag dataset. The vertical dotted line denotes the 95th percentile for the probability densities combined (8956km)."}
+``` {r Figure 2 - MigrationEnergeticPercentages, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 8)}
 pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00")
 
 pMEP <- ggplot(EPercentagesSummary) +
   geom_density(data=filter(MigrationDistancesLit,Species!="Gray"), aes(x = Migration_Distance_km, y = ..scaled..*15, group = Species, fill = Species, alpha = 0.5), adjust = 1.5, size = 3) +
-  geom_smooth(method=loess, aes(x=MigratoryDistance, y=Min_Percent, color=Species), size = 3) +
-  geom_point(aes(x=MigratoryDistance, y=Min_Percent, color=Species), size = 6) +
+  geom_smooth(method=loess, aes(x=MigratoryDistance, y=Min_Percent, color=Species), size = 5) +
+  geom_point(aes(x=MigratoryDistance, y=Min_Percent, color=Species), size = 10) +
   geom_vline(xintercept = DistancePercentile, linetype = "dotted", size = 3) +
   annotate("text", x=8800, y=30, label="95% Percentile", size = 16, angle="90") +
   coord_cartesian(xlim = c(1500,12500), expand = TRUE) +
@@ -506,7 +511,7 @@ pMEP <- ggplot(EPercentagesSummary) +
   scale_y_continuous(breaks = seq(0, 50, by = 5)) +
   scale_color_manual(values = pal) +
   scale_fill_manual(values = pal) +
-  labs(x = "Uni-Directional Migration Distance (km)",
+  labs(x = "Unidirectional Migration Distance (km)",
        y = "Full-Year Migration Cost (% of Annual Budget)") +
   guides(alpha = "none", 
          fill = "none",
@@ -529,8 +534,8 @@ ggsave("figs/MigrationPercentages.pdf", height = 720, width = 960, units = "mm",
 convert_pdf_to_png("figs/MigrationPercentages.pdf", "figs/MigrationPercentages.png", dpi = 300)
 ```
 
-```{r Figure 3 - SpeedCurves, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 4), fig.cap = "Figure 3. Relationship between over-ground swimming speed and the energetic ratio between annual migration costs and annual feeding season energy intake. Curves are given for a range of uni-directional migration distances (2000-12000km). Vertical segments denote the swimming speeds that minimize each curve. Dashed vertical lines denote the converted values of optimal swimming speed for each species in our analysis (@gough_etal19). Pie charts correspond to the percentages of the annual cycle (in days) devoted to foraging (blue), migration (orange), and breeding (grey)."}
-pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00", "FeedDaysAtMinSpeed" =  "#305496", "FullYearMigDaysAtMinSpeed" = "#f3b284", "BreedingDays" = "#595959")
+```{r Figure 3 - SpeedCurves, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 8)}
+pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00", "FeedDaysAtMinSpeed" =  "#305496", "FullYearMigDaysAtMinSpeed" = "#f3b284", "BreedingDays" = "#D3D3D3")
 
 pSC <- ggplot(ERatiosForSpeedCurves) +
   geom_vline(xintercept = 2.09/2, linetype = 2, size = 2, colour = "#D55E00") +
@@ -556,7 +561,7 @@ pSC <- ggplot(ERatiosForSpeedCurves) +
   annotate("text", x=0.57, y=0.20, label="8000km", size = 16) +
   annotate("text", x=0.71, y=0.40, label="10000km", size = 16) +
   annotate("text", x=0.87, y=0.5, label="12000km", size = 16) +
-  labs(x = bquote("Over-Ground Swimming Speed (m s"^-1*")"),
+  labs(x = bquote("Over-Ground Migration Speed (m s"^-1*")"),
        y = bquote(Log[10]* " Migration Cost / Foraging Intake")) +
   coord_cartesian(ylim = c(-2,0.5)) +
   scale_color_manual(values = pal) +
@@ -574,12 +579,13 @@ convert_pdf_to_png("figs/SpeedCurves.pdf", "figs/SpeedCurves.png", dpi = 300)
 
 ```
 
-```{r Figure 4 - DistanceVersusSpeed, echo=FALSE, fig.align='center', fig.dim=c(8, 4), fig.keep='all', message=FALSE, warning=FALSE, results='hide', fig.cap = "Figure 4. Relationship between migration distance and over-ground swimming speed for satellite tracks obtained from literature sources. Filled symbols denote average values for a given migration route, with the size of symbols corresponding to the number of tag deployments averaged together from that migration route. Circles and squares denote equatorward and poleward migration routes, respectively. The dashed gray line denotes the relationship for these symbols, while the solid black line denotes the relationship between migration distance and over-ground swimming speed taken from our modeled optimal over-ground speeds shown in Figure 3."}
+```{r Figure 4 - DistanceVersusSpeed, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 8)}
 pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00")
 
 pLMSC <- ggplot(OptSpeedSummary, aes(Distance, OptSpeed)) +
   geom_smooth(method = lm, colour = "black", fullrange=TRUE, size = 3, se=FALSE) +
   geom_smooth(data = MigrationDistancesLitAvgs, aes(Migration_Distance_km, Migration_Speed_m_s), method = lm, colour = "darkgrey", linetype = "dashed", fullrange=TRUE, size = 3) +
+  geom_point(data = MigrationDistancesLit, aes(Migration_Distance_km, Migration_Speed_m_s, color = Species, stroke = 2, shape = Direction_of_Travel), size = 12, alpha = 0.8) +
   geom_point(data = MigrationDistancesLitAvgs, aes(Migration_Distance_km, Migration_Speed_m_s, fill = Species, size = Number_of_Observations, shape = Direction_of_Travel)) +
   geom_segment(aes(x = 8500, xend = 8900, y = 0.5, yend = 0.5, fill = "black", linetype = "solid"), size = 2) +
   geom_text(x = 9000, y = 0.4, label = Linear_Relationship2(OptSpeedSummary$Distance, OptSpeedSummary$OptSpeed), size = 16, hjust = 0) +
@@ -588,10 +594,11 @@ pLMSC <- ggplot(OptSpeedSummary, aes(Distance, OptSpeed)) +
   coord_cartesian(xlim = c(1500,12500), expand = TRUE) +
   scale_x_continuous(breaks = seq(2000, 12000, by = 2000)) +
   scale_fill_manual(values = pal) +
+  scale_color_manual(values = pal) +
   scale_shape_manual(values = c(21,22)) +
   scale_size(range = c(12, 36)) +
-  labs(x = "Migration Distance (km)",
-       y = bquote("Over-Ground Swimming Speed (m s"^-1*")")) +
+  labs(x = "Unidirectional Migration Distance (km)",
+       y = bquote("Over-Ground Migration Speed (m s"^-1*")")) +
   guides(size = "none", 
          linetype = "none",
          shape = guide_legend(title = "Direction of Travel", override.aes = list(size = 10)),
@@ -600,7 +607,7 @@ pLMSC <- ggplot(OptSpeedSummary, aes(Distance, OptSpeed)) +
   theme(axis.text = element_text(size = 48),
         axis.title = element_text(size = 60),
         axis.line = element_line(color = "black", size = 1),
-        legend.position = c(0.10, 0.8),
+        legend.position = c(0.10, 0.85),
         legend.title = element_text(size = 52),
         legend.text = element_text(size = 48),
         panel.grid.minor = element_blank())
@@ -610,65 +617,82 @@ ggsave("figs/DistanceVersusSpeed.pdf", height = 480, width = 960, units = "mm", 
 convert_pdf_to_png("figs/DistanceVersusSpeed.pdf", "figs/DistanceVersusSpeed.png", dpi = 300)
 ```
 
+# Affiliations
+
+1) Hopkins Marine Station, Stanford University, Pacific Grove, CA 93950, USA.
+2) Marine Mammal Research Program, Hawaii Institute of Marine Biology, University of Hawaii, Manoa, Kaneohe, HI 96744, USA.
+3) NOAA Southwest Fisheries Science Center, Fisheries Ecology Division, Santa Cruz, CA 95060, USA.
+4) Ocean Sciences Department, University of California, Santa Cruz, Santa Cruz, CA 95060, USA
+5) Marine Mammal Institute, Oregon State University, Newport, OR 97365, USA
+6) Department of Fisheries, Wildlife, and Conservation Sciences, Oregon State University, Newport, OR 97365, USA
+7) Cascadia Research Collective, Olympia, WA 98501, USA.
+8) Monterey Bay Aquarium Research Institute, Moss Landing, CA 95039, USA
+9) NOAA Southwest Fisheries Science Center, Ecosystem Science Division, Monterey, CA 93940, USA.
+10) Lead Contact
+
+Correspondence: wgough@hawaii.edu
+
 # Summary
 
-Long-distance animal migrations are energetically demanding behaviors performed for a variety of reasons, with migrants facing a continuum between cost- and time-minimizing strategies [@abrahms_etal19; @alerstam_lindstrom90; @block_etal11; @kenney_etal01; @lasorte_etal16; @merkle_etal16; @pitman_etal15]. Minimizing expenditure leaves more energy available for other processes (e.g., growth and reproduction), but may result in fewer foraging opportunities. Minimizing time results in longer foraging periods and increased energetic intake, but incurs high movement costs. Optimal migration theory predicts that migrants may optimize their energy budget by adopting an intermediate strategy [@alerstam_lindstrom90]. To test this hypothesis, we chose baleen whales (Mysticeti), a well-studied group of capital breeders (i.e., species which rely on accumulated energy stores from a discrete feeding season to fuel reproduction and maintenance throughout the year) that exhibit ocean-basin scale migrations, large body sizes, and relatively fast reproductive cycles that would presumably drive optimization of their annual energy budget [@drent_daan80; @evans_bearhop22; @horton_etal22; @jonsson97; @stephens_etal09; @fortune_etal12; @goldbogen_etal19; @johnson_etal22; @lockyer07]. Using tag-based estimates of foraging intake and swimming costs, we modeled the energy gained during a variable-duration foraging season and the energy spent during a variable-speed migration [@gough_etal22; @savoca_etal21]. We found optimal migration speeds of approximately 1 ms-1 for shorter migration distances, with longer migrations requiring higher speeds to minimize transit costs relative to foraging intake. Our model accurately predicted the migration distance and speed relationship for 67 satellite-tracked mysticetes from three species and 10 migration routes as well as low migration costs at optimal speeds (<15% of annual budget) in most cases. These results demonstrate that time- and energy-minimizing migration strategies are not distinct options, and migrants optimize their annual energy budgets by adopting intermediate strategies.
+Long-distance animal migrations are energetically demanding behaviors performed for a variety of reasons, with migrants facing a continuum between cost- and time-minimizing strategies [@abrahms_etal19; @alerstam_lindstrom90; @brown_etal23; @kenney_etal20; @lasorte_etal16; @merkle_etal16; @pitman_etal15]. Minimizing expenditure leaves more energy available for other processes (e.g., growth and reproduction), but may result in fewer foraging opportunities. Minimizing time results in longer foraging periods and increased energetic intake, but incurs high movement costs. Optimal migration theory predicts that migrants may optimize their energy budget by adopting an intermediate strategy [@alerstam_lindstrom90]. To test this hypothesis, we modeled the annual energy budgets of baleen whales (Mysticeti), a well-studied group of migratory capital breeders (i.e., species which rely on accumulated energy stores to fuel reproduction) [@drent_daan80, @jonsson97, @stephens_etal09]. Mysticetes undertake ocean-basin scale migrations, so their large body sizes and fast reproductive cycles likely place strong selective pressures to optimize their annual energy budgets [@evans_bearhop22, @goldbogen_etal19, @lockyer07]. Using tag-based estimates of foraging intake and swimming costs, we modeled the energy gained during a variable-duration foraging season and the energy spent during a variable-speed migration [@gough_etal22, @savoca_etal21]. We found optimal migration speeds of approximately 1 $ms^{-1}$ for shorter migration distances (2000-4000km), with longer migrations (up to 12000km) requiring higher speeds to minimize transit costs relative to foraging intake. Our model accurately predicted the migration speeds of 67 satellite-tracked mysticetes from three species and 10 migration routes. At optimal swimming speeds, we estimate migration accounts for <15% of the annual energy budget in most cases. These results demonstrate that time- and energy-minimizing migration strategies are not distinct options, and migrants optimize their annual energy budgets by adopting intermediate strategies.
 
 # Results
 
 ## Annual Energetic Cost of Migration
 
-Recent studies on several mysticete species combining biologging tags with UAS-derived (unmanned aerial systems) morphometrics and hydrodynamic physical modeling have produced high-resolution estimates of energetic intake and costs for both foraging and swimming [@goldbogen_etal19; @savoca_etal21] (Figure 1). Using those estimates, we quantified the relationship between migration distance and the percentage of annual energetic budget devoted to migration (Figure 2). Of the four species in our analysis, cost per km of migration increased the fastest in humpback whales (increased by factor of 17.58 between 2000km and 12000km) and slowest in Antarctic minke whales (increased by factor of 17.04 between 2000km and 12000km).
+Recent studies on several mysticete species have produced high-resolution estimates of energetic intake and costs for both foraging and swimming by combining biologging tags with UAS-derived (uncrewed aerial systems) morphometrics and hydrodynamic physical modeling [@goldbogen_etal19; @savoca_etal21] (Figure 1). Using those estimates, we quantified the relationship between migration distance and the percentage of annual energetic budget devoted to migration (Figure 2). Of the four species in our analysis, cost per km of migration increased the fastest in humpback whales (increased by factor of 17.58 between 2000km and 12000km) and slowest in Antarctic minke whales (increased by factor of 17.04 between 2000km and 12000km).
 
 ![Figure 1. Schematic of a humpback whale annual cycle (right) with a generic equatorward migration route highlighted (bottom left). The upper left box highlights the variables used to determine the energetic cost and intake of a single day on the foraging ground.](./figs/AnnualCycleSchematic.png)
 
 From satellite tracks of migrating humpback (n=24) and blue whales (n=41), we found the combined 95th percentile of migration distances to be 8956km, corresponding to annual migration costs ranging from 10-20%. Mean migration distances of 5511km for humpback and 4080km for blue whales correlated with lower annual migration costs (>10%). We did not have a full energetic model for the gray whales in our dataset (n=2), but their migration distances were long (>10000km), suggesting annual migration costs as high as 30%.
 
-![Figure 2. Relationship between migration distance and the percentage of annual energy used for migration. Curves correspond to the minimal energy used for migration (annual total) as a percentage of annual net feeding season energy intake for an animal performing migrations of a given uni-directional distance. Probability density plots correspond to the migration distances for humpback (orange; n=24) and blue (blue; n=41) whales taken from our satellite tag dataset. The vertical dotted line denotes the 95th percentile for the probability densities combined (8956km).](./figs/MigrationPercentages.png)
+![Figure 2. Relationship between migration distance and the percentage of annual energy used for migration. Curves correspond to the minimal energy used for migration (annual total) as a percentage of annual net foraging season energy intake for an animal performing migrations of a given unidirectional distance. Probability density plots correspond to the migration distances for humpback (orange; n=24) and blue (blue; n=41) whales obtained through satellite tagging. Data are detailed in Table S1 [@kettemer_etal22; @modest_etal21; @palacios_etal19; @palacios_etal20; @riekkola_etal20]. The vertical dotted line denotes the 95th percentile for the probability densities combined (8956km).](./figs/MigrationPercentages.png)
 
-## Optimal Migration Speeds
+## Optimal Over-Ground Migration Speeds
 
-We found a concave relationship between the over-ground swimming speed of an individual and the ratio of net feeding season energy intake to migration energy loss (Figure 3). Each curve displays a single speed at which the energetic ratio of cost:benefit was minimized, representing an optimal migration speed. These optimal migration speeds fell between 0.95-1.55 m s-1 across our range of migration distances (2000-12000km), with longer migration distances correlated with faster optimal migration speeds and an increased ratio of migration costs to annual energy intake. Longer migration distances also correlated with a higher percentage of the annual cycle (in days) devoted to migration (ranging from 13% or 47.5 days for a 2000km migration to 48.3% or 176.4 days for a 12000km migration).
+Speed values throughout our study are presented as over-ground migration speeds (horizontal point-to-point speed), unless explicitly stated to be instantaneous forward swimming speed in three dimensions. We found a concave relationship between the migration speed of an individual and the ratio of net foraging season energy intake to migration energy loss (Figure 3). Each curve displays a single migration speed at which the energetic ratio of cost:benefit was minimized, representing an optimal migration speed. These optimal migration speeds fell between 0.95-1.55 $ms^{-1}$ across our range of migration distances (2000-12000km), with longer migration distances correlated with faster optimal migration speeds and an increased ratio of migration costs to annual energy intake. Longer migration distances also correlated with a higher percentage of the annual cycle (in days) devoted to migration at optimal migration speeds (ranging from 13% or 47.5 days for a 2000km migration to 48.3% or 176.4 days for a 12000km migration).
 
-The average over-ground swimming speeds for blue whales (1.01 m s-1) taken from our satellite tag dataset aligned closely with our predicted optimal speed for a 4000km migration distance (1.050 m s-1), a distance very close to their average migration distance (4080km). Speeds for humpback whales (1.30 m s-1) were higher, aligning closely with the optimal speed for a 8000km migration (1.30 m s-1) while their average migration distance (5511km) would suggest a swimming speed closer to the optimal speed for our 6000km curve (1.175 m s-1). At distances near the middle of our range (~6000km), optimal migration speeds align closely with optimal cruising speeds (~2.5m s-1 swimming or ~1.25m s-1 over-ground) found during routine swimming [@gough_etal19; @gough_etal21].
+The average migration speeds (mean $\pm$ SE) for blue whales taken from our satellite tag dataset (1.01 $\pm$ 0.04 $ms^{-1}$) aligned closely with our predicted optimal migration speed for a 4000km migration distance (1.05 $ms^{-1}$), a distance very close to their average migration distance (4080km). Average migration speeds for humpback whales (1.30 $ms^{-1}$) were higher, aligning closely with the optimal migration speed for a 8000km migration (1.30 $\pm$ 0.07 $ms^{-1}$), while their average migration distance (5511km) would suggest a speed closer to the optimal speed for our 6000km curve (1.18 $ms^{-1}$). At distances near the middle of our range (~6000km), optimal migration speeds were similar to the routine swimming speed that minimizes cost-of-transport (~1.25 $ms^{-1}$ over-ground speed, or ~2.50 $ms^{-1}$ instantaneous forward speed) [@gough_etal19; @gough_etal21].
 
-We compared our modeled relationship between migration distance and swimming speed against our full satellite tag dataset (n=67) and found a similar increasing relationship between migration distance and over-ground swimming speed (Figure 4; p=0.99). Migration direction (equatorward vs. poleward) did not impact this relationship and did not differ for migration distance (p=0.68) or swimming speed (p=0.24). Across the range of migration distances, swimming speeds from our satellite tag dataset were significantly higher than our model by approximately 0.1 m s-1 (intercepts of 0.88 and 0.84; p<0.001).
+We compared our modeled relationship between migration distance and optimal migration speed against our full satellite tag dataset (n=67) and found a similar increasing relationship between migration distance and migration speed (Figure 4; p=0.99 for a comparison of the slopes of each regression, suggestion no significant differences). Migration direction (equatorward vs. poleward) did not impact this relationship and we found that migration distances and migration speeds did not differ between the two directions (p=0.68 for distance; p=0.24 for speed). Across the range of migration distances, migration speeds from our satellite tag dataset were significantly higher than our model by approximately 0.10 $ms^{-1}$ (intercepts of 0.88 and 0.84 $ms^{-1}$, respectively; p<0.001 for a comparison of the intercepts of each relationship).
 
-![Figure 3. Relationship between over-ground swimming speed and the energetic ratio between annual migration costs and annual feeding season energy intake. Curves are given for a range of uni-directional migration distances (2000-12000km). Vertical segments denote the swimming speeds that minimize each curve. Dashed vertical lines denote the converted values of optimal swimming speed for each species in our analysis (@gough_etal19). Pie charts correspond to the percentages of the annual cycle (in days) devoted to foraging (blue), migration (orange), and breeding (grey).](./figs/SpeedCurves.png)
+![Figure 3. Relationship between over-ground migration speed and the energetic ratio between annual migration costs and annual foraging season energy intake. Curves are given for a range of unidirectional migration distances (2000-12000km). Vertical segments denote the migration speeds that minimize each curve. Dashed vertical lines denote the converted values of routine swimming speed that minimize cost-of-transport for each species in our analysis [@gough_etal19]. Pie charts correspond to the percentages of the annual cycle (in days) devoted to foraging (blue), migration (orange), and breeding (light grey).](./figs/SpeedCurves.png)
 
-![Figure 4. Relationship between migration distance and over-ground swimming speed for satellite tracks obtained from literature sources. Filled symbols denote average values for a given migration route, with the size of symbols corresponding to the number of tag deployments averaged together from that migration route. Circles and squares denote equatorward and poleward migration routes, respectively. The dashed gray line denotes the relationship for these symbols, while the solid black line denotes the relationship between migration distance and over-ground swimming speed taken from our modeled optimal over-ground speeds shown in Figure 3.](./figs/DistanceVersusSpeed.png)
+![Figure 4. Relationship between migration distance and over-ground migration speed for satellite tracks obtained from literature sources. Filled symbols denote average values for a given migration route, with the size of symbols corresponding to the number of tag deployments averaged together from that migration route. Unfilled symbols correspond to individual satellite track data included in the migration route averages. Circles and squares denote equatorward and poleward migration routes, respectively. The dashed gray line denotes the relationship for these symbols, while the solid black line denotes the relationship between migration distance and optimal migration speed taken from our model shown in Figure 3.](./figs/DistanceVersusSpeed.png)
 
 # Discussion
 
-Our results are the first to show that a group of long-distance migratory species optimize their travel speeds for energetic efficiency across a range of migration distances. These optimal migration speeds result from a tradeoff between phenological constraints and swimming costs. If whales swim slower than the optimal speed (cost-minimizing), then the late arrival to the foraging grounds reduces foraging opportunities and energy intake. Conversely, whales that swim faster than the optimal speed (time-minimizing) incur locomotor costs greater than the energy gained from additional feeding days. In keeping with optimal migration theory, our model predicted an intermediate solution for each migration distance that optimized the cost:benefit ratio between migration swimming costs and feeding season energy intake.
+Our results are the first to show that a group of ocean-going, long-distance migratory species optimize their travel speeds for energetic efficiency across a range of migration distances. These optimal migration speeds result from a tradeoff between phenological constraints and swimming costs. If whales swim slower than the optimal migration speed (cost-minimizing), then the late arrival to the foraging grounds reduces foraging opportunities and energy intake. Conversely, whales that swim faster than the optimal migration speed (time-minimizing) incur locomotor costs greater than the energy gained from additional foraging days. In keeping with optimal migration theory [@alerstam_lindstrom90], our model predicted an intermediate solution for each migration distance that optimized the cost:benefit ratio between migration swimming costs and foraging season energy intake.
 
-Previous research on migrating mysticetes found an energetic tradeoff within the migration route, with faster migrations incurring higher swimming costs but lower metabolic costs over a shorter period of time, leading to near-parity in energetic costs between short- and long-distance migrations [@riekkola_etal20]. Our results suggest that, even at optimal swimming speeds, longer migrations incur higher costs when we factor in the broader annual cycle (Figures 3-4). From this purely energetic standpoint, the optimal life-history strategy would be to reduce migration costs to zero and remain in one place throughout the year, suggesting that the fitness benefits of a migration must outweigh the energetic costs.
+Previous research on migrating mysticetes found an energetic tradeoff within the migration route, with faster migrations incurring higher swimming costs but lower metabolic costs over a shorter period of time, leading to near-parity in energetic costs between short- and long-distance migrations [@riekkola_etal20]. Our results suggest that, even at optimal migration speeds, longer migrations incur higher costs when we factor in the broader annual cycle (Figures 3-4). From this purely energetic standpoint, the optimal life-history strategy would be to reduce migration costs to zero and remain in one place throughout the year, strongly suggesting that the fitness benefits of migration must outweigh the energetic costs in mysticetes.
 
-Fitness benefits can manifest in a number of documented ways, from predator and parasite avoidance to better mate selection or the maximization of energy intake at another location or point in the year [@avgar_etal14, p. 201; @braithwaite_etal15; @pelletier_etal20]. For species that track shifting food sources [@aikens_etal20], migration is an obvious tactic to increase energetic intake. For large mysticetes that leave their prey-rich foraging grounds in the winter, migration likely developed as a way to escape the high-latitude habitats of mammal-eating killer whales (Orcinus orca) and protect newborn calves from predation during their most vulnerable life stages [@corkeron_connor99; @mehta_etal07; @pitman_etal15]. This suggests that the fitness benefit from increased calf survival is greater than the costs of higher adult mortality.
+Migration offers diverse fitness benefits, from predator and parasite avoidance to better mate selection or the maximization of energy intake at another location or point in the year [@avgar_etal14; @braithwaite_etal15; @pelletier_etal20]. For species that track shifting food sources [@aikens_etal20], migration increases energetic intake. For large mysticetes that leave their prey-rich foraging grounds in the winter, migration may have evolved to accelerate development or avoid predation. Warmer waters at low latitudes may allow for faster calf growth rates if they can reallocate energy from thermoregulation to growth [@clapham01; @rasmussen_etal07]. Predators, specifically killer whales (_Orcinus orca_), frequently attack calves and are more abundant at high latitudes [@corkeron_connor99; @mehta_etal07; @pitman_etal15]. Thus the fitness benefits of mysticete migration are derived from faster growth and reduced mortality of offspring, which likely outweigh the fitness costs associated with adult energy expenditure.
 
-Mysticetes are thought to have established long-distance migration patterns and experienced rapid gigantism in the last ~5-10 million years due to a phase shift in ocean ecosystems towards stronger seasonality [@taylor_etal19; @slater_etal17]. The high foraging efficiencies that resulted from this shift likely allowed for rapid mass-specific calf development and growth with subsequently shorter, less costly breeding season intervals [@oftedal97a; @fortune_etal12; @read_harvey89; @sibly_brown07]. Large body sizes also result in low mass-specific transport costs and large energy reserves, resulting in lower migration costs and an increased ability to support a capital breeding lifestyle [@oftedal00; @williams18].
+Mysticetes are thought to have established long-distance migration patterns and experienced rapid gigantism in the last ~5 million years due to a phase shift in ocean ecosystems towards stronger seasonality [@slater_etal17; @taylor_etal19a]. The high foraging efficiencies that resulted from this shift likely allowed for rapid mass-specific calf development and growth with subsequently shorter, less costly breeding season intervals [@fortune_etal12; @oftedal97a; @read_harvey89; @sibly_brown07]. Large body sizes also result in low mass-specific transport costs and large energy reserves, resulting in lower migration costs and an increased ability to support a capital breeding lifestyle [@oftedal00; @williams18].
 
-This suite of evolutionary adaptations has allowed mysticetes to remain successful for the last ~5 million years, but this fast pace of life is dependent on abundant and predictable prey resources. Anthropogenic impacts on modern oceans (i.e. climate change, pollution, overfishing, ocean noise) have begun to impact the reliability and geographic location of prey species, possibly resulting in longer and more costly migrations [@hazen_etal13]. The majority of whales in our analysis migrated less than ~9000km (uni-directionally) in a year, thereby keeping energetics costs low (~5-15% of annual budget; Figure 2). But in the future situations outlined, an increase of 1000-2000km could have a substantial impact on the cost of migration - increasing it by as much as 5-10%. In addition, unexpected or cumulative disturbances can cause direct impacts on the foraging success of mysticetes [@pirotta_etal18; @pirotta_etal19], lowering their annual energy intake below the theoretical values that we have predicted. Villegas-Amtmann et al. [@villegas-amtmann_etal15; @villegas-amtmann_etal17] found that for the gray whale, a feeding season intake reduction of as little as 4% could result in a suspension of pregnancy, while a reduction of ~30% would represent a significant impact on long-term species fitness. These scenarios call into question whether life history strategies that include long-distance migrations will remain profitable into the future, or whether shorter distance or non-migratory strategies such as those seen in equatorial mysticete populations will become more common [@izadi_etal22; @iwata_etal17; @christiansen_etal; @geijer_etal16; @best01]. In any event, mysticetes' ability to optimize their travel speeds for energetic efficiency at different migratory distances undoubtedly increases their individual and species-level fitness.
+This suite of evolutionary adaptations has allowed mysticetes to remain successful for the last ~5 million years, but this fast pace of life is dependent on abundant and predictable prey resources. Anthropogenic impacts on modern oceans (i.e., climate change, pollution, overfishing, ocean noise) have begun to impact the reliability, quality, and geographic location of prey species, possibly resulting in longer and more costly migrations [@agrelo_etal21; @gremillet_descamps23; @gulland_etal22; @hazen_etal13; @meyer-gutbrod_etal23; @nelms_etal21; @robinson_etal09; @szesciorka_stafford23]. The majority of whales in our analysis migrated less than ~9000km (unidirectionally) in a year, thereby keeping energetic costs low (~5-15% of annual budget; Figure 2). But in the shifting prey scenarios outlined for future oceans, an increase of 1000-2000km could increase the cost of migration by as much as 5-10%, a significant burden that may have adverse ecological implications for species such as the gray whale that perform longer migrations and may be operating closer to their energetic capacities [@stewart_etal23]. Villegas-Amtmann et al. [@villegas-amtmann_etal15; @villegas-amtmann_etal17] found that for the gray whale, a foraging season intake reduction of as little as 4% could result in a suspension of pregnancy, while a reduction of ~30% would represent a significant impact on long-term species fitness. Pallin et al. [@pallin_etal23] similarly found that reproduction of humpback whales in the Antarctic is prey-limited, with pregnancy rates negatively impacted by declines in the abundance of krill. Mysticetes have shown resilience to predictable fluctuations in their environment and they can vary the timing and duration of foraging, migration, and breeding to account for these natural variations [@avila_etal20; @irvine_etal14; @oestreich_etal22; @russell_etal22; @szesciorka_etal20]. Unexpected or cumulative disturbances, on the other hand, can cause direct impacts on the foraging success of mysticetes [@pirotta_etal18; @pirotta_etal19], lowering their annual energy intake below the theoretical values that we have predicted.
 
-# Materials & Methods
+These habitat uncertainties call into question whether life history strategies that include long-distance migrations will remain profitable into the future, or whether shorter distance or non-migratory strategies such as those seen in equatorial mysticete populations will become more common [@best01; @geijer_etal16; @iwata_etal17; @izadi_etal22a; @minton_etal15]. In any event, mysticetes’ ability to optimize their travel speeds for energetic efficiency across migration distances undoubtedly increases their fitness, underpinning their evolutionary success.
 
-We chose a five-meter range of body lengths ($TL_{\text{body}}$) for four mysticete species: blue (_Balaenoptera musculus_), fin (_Balaenoptera physalus_), humpback (_Megaptera novaeangliae_), and Antarctic minke (_Balaenoptera bonaerensis_). Each range was centered at the average body length for that species taken from a UAS dataset of tagged animals used to calculate our swimming and feeding ground energetic estimates [@gough_etal21; @gough_etal22]. 
+# STAR Methods
+
+For our energetic and optimal migration speed models, we chose a five-meter range of body lengths ($TL_{\text{body}}$) for four mysticete species: blue (_Balaenoptera musculus_), fin (_Balaenoptera physalus_), humpback (_Megaptera novaeangliae_), and Antarctic minke (_Balaenoptera bonaerensis_). Each range was centered at the average body length for that species taken from a UAS dataset of tagged animals used to calculate the energetic estimates underlying our optimal migration speed model [@gough_etal21; @gough_etal22]. 
 
 ## Satellite Tag Data
 
-In a literature review of satellite tag data for migratory mysticetes, we found data for blue (n = 41) and humpback (n = 24), with smaller numbers for the gray (_Eschrichtius robustus_; n = 2).
+In a literature review of satellite tag data for migratory mysticetes, we found data for blue (n = 41) and humpback (n = 24), with smaller numbers for the gray whale (_Eschrichtius robustus_; n = 2).
 
-Satellite tag data was compiled from multiple literature sources and tag types (Table S1). To be included in our dataset, a satellite track had to include: 1) a complete migration moving in either direction (i.e., from foraging ground to breeding ground or vice-versa), 2) not include any portions of swimming on the foraging or breeding grounds, 3) the overall distance covered by the animal during the migration ($D_{\text{mig}}$; km), and 4) the duration of the migration period ($T_{\text{mig.uni}}$; days). Using this data, we were able to calculate the over-ground speed of each animal ($U_{\text{over-ground}}$; $m s^{-1}$) using the equation:
+Satellite tag data was compiled from multiple literature sources and tag types (Table S1). To be included in our dataset, a satellite track had to include: 1) a complete migration moving in either direction (i.e., from foraging ground to breeding ground or vice-versa), 2) not include any portions of swimming on the foraging or breeding grounds, 3) the overall distance covered by the animal during the migration ($D_{\text{mig}}$; km), and 4) the duration of the migration period ($T_{\text{mig.uni}}$; days). Using this data, we were able to calculate the over-ground migration speed of each animal ($U_{\text{over-ground}}$; $m s^{-1}$) using the equation:
 
 $$
 U_{\text{over-ground}} = \frac{D_{\text{mig}}*1000}{T_{\text{mig.uni}}*86400} \quad (1)
 $$
 
-Using average values for $D_{\text{mig}}$, $T_{\text{mig.uni}}$, and $U_{\text{over-ground}}$, we calculated the distance ($D_{\text{mig.avg}}$), duration ($T_{\text{mig.uni.avg}}$), and over-ground speed ($U_{\text{over-ground.avg}}$) for a stereotypical migration route (Figure S1). We used these values to parameterize a standardized annual cycle as well as our energetic models.
+Using average values for $D_{\text{mig}}$, $T_{\text{mig.uni}}$, and $U_{\text{over-ground}}$, we calculated the distance ($D_{\text{mig.avg}}$), duration ($T_{\text{mig.uni.avg}}$), and over-ground migration speed ($U_{\text{over-ground.avg}}$) for a stereotypical migration route (Figure S1). We used these values to parameterize a standardized annual cycle as well as our energetic models.
 
 ## Standardized Annual Cycle
 
-Our energetic models were predicated on a standardized annual cycle, with costs and benefits calculated as deviations from that cycle. From our satellite tag dataset, we calculated $T_{\text{mig.uni.avg}}$ to be 52 days (Figure S1), so we estimated 50 days for a uni-directional migration ($T_{\text{mig.uni.standard}}$), resulting in 100 days spent migrating during a standardized annual cycle ($T_{\text{mig.year.standard}}$). For the time spent on the breeding ground ($T_{\text{breed.standard}}$), we estimated 60 days based on sightings data, specifically from Maui-Nui for humpback whales (Evans et al., in prep; van Aswegen, pers. comm.). Finally, we estimated the feeding season as the remaining portion of the year, set to 205 days ($T_{\text{feed.standard}}$).
+Our energetic models were predicated on a standardized annual cycle, with costs and benefits calculated as deviations from that cycle. From our satellite tag dataset, we calculated $T_{\text{mig.uni.avg}}$ to be 52 days (Figure S1), so we estimated 50 days for a unidirectional migration ($T_{\text{mig.uni.standard}}$), resulting in 100 days spent migrating during a standardized annual cycle ($T_{\text{mig.year.standard}}$). For the time spent on the breeding ground ($T_{\text{breed.standard}}$), we estimated 60 days based on sightings data, specifically from Maui-Nui for humpback whales (Evans and van Aswegen, pers. comm.). Finally, we estimated the foraging season as the remaining portion of the year, set to 205 days ($T_{\text{feed.standard}}$).
 
 ```{r Figure S1 - MigrationLiteratureDensities, include=FALSE}
 pDens1 <- ggplot(MigrationDistancesLit, aes(x = Migration_Duration_days)) + 
@@ -734,9 +758,9 @@ ggsave("figs/Methods/MigrationLiteratureDensities.pdf", height = 480, width = 96
 convert_pdf_to_png("figs/Methods/MigrationLiteratureDensities.pdf", "figs/Methods/MigrationLiteratureDensities.png", dpi = 300)
 ```
 
-![Figure S1. Probability density plots for migration duration (in days), over-ground swimming speed (m s-1), and migration distance taken from a review of the literature. Data are detailed in Table S1.](./figs/Methods/MigrationLiteratureDensities.png)
+![Figure S1. Probability density plots for migration duration (in days), over-ground migration speed ($ms^{-1}$), and migration distance (km) taken from a review of the literature. Data are detailed in Table S1.](./figs/Methods/MigrationLiteratureDensities.png)
 
-## Foraging Season Energetics
+## Standardized Foraging Season Energetics
 
 We determined the net energy obtained from a day of foraging ($Enet_{\text{feed.day}}$; kJ) using the equation:
 
@@ -744,15 +768,15 @@ $$
 E_{\text{feed.day}} = E_{\text{feed.day.gain}} - E_{\text{feed.day.cost}} \quad (2)
 $$
 
-where $E_{\text{feed.day.gain}}$ and $E_{\text{feed.day.cost}}$ are calculated for each species at a given body length using body length regressions from the literature [@gough_etal22]. These regressions subtracted the energetic cost of a lunge feeding event from the energetic intake of that same event, then multiplied the duration of the lunge feeding event by the average number of lunges performed in a day for that species taken from Savoca et al. [-@savoca_etal21]. For the remaining portion of the day, we calculated the energetic cost per second using metabolic equations outlined by Gough et al. [-@gough_etal22] and body mass ($M_{\text{body}}$; kg) calculated from body length using methods outlined by Kahane-Rapport and Goldbogen [-@kahane-rapport_goldbogen18]. To determine the net energy flux for a standard feeding season ($E_{feed.year.standard}$; kJ), we multiplied $E_{\text{feed.day}}$ by the $T_{\text{feed.standard}}$ using the equation:
+where $E_{\text{feed.day.gain}}$ and $E_{\text{feed.day.cost}}$ are calculated for each species at a given body length using body length regressions from the literature [@gough_etal22]. These regressions subtracted the energetic cost of a lunge feeding event from the energetic intake of that same event, then multiplied the duration of the lunge feeding event by the average number of lunges performed in a day for that species taken from Savoca et al. [@savoca_etal21]. For the remaining portion of the day, we calculated the energetic cost per second using metabolic equations outlined by Gough et al. [@gough_etal22] and body mass ($M_{\text{body}}$; kg) calculated from body length using methods outlined by Kahane-Rapport and Goldbogen [@kahane-rapport_goldbogen18]. To determine the net energy flux for a standard foraging season ($E_{feed.year.standard}$; kJ), we multiplied $E_{\text{feed.day}}$ by the $T_{\text{feed.standard}}$ using the equation:
 
 $$
 E_{\text{feed.year.standard}} = E_{\text{feed.day}}*T_{\text{feed.standard}} \quad (3)
 $$
 
-## Migration Route Energetics
+## Standardized Migration Route Energetics
 
-We estimated the combined energetic cost of swimming and metabolism ($E_{\text{swim.sec}}$; $kJs^{-1}$) for each species at a given body length using the equation:
+We estimated the combined energetic cost of swimming ($E_{\text{swim.sec}}$; $kJs^{-1}$) and metabolism for each species at a given body length using the equation:
 
 $$
 E_{\text{swim.sec}} = 
@@ -760,7 +784,7 @@ E_{\text{swim.sec}} =
 \frac{BMR_{\text{kleiber}}*1000}{86400}) \div 1000 \quad (4)
 $$
 
-where $P_{\text{T}}$ is the thrust power output ($Wkg^{-1}$) estimated for a given swimming speed ($U_{swim}$; $ms^{-1}$) with a regression taken from Gough et al. [-@gough_etal21], $\eta_{\text{met}}$ is a metabolic efficiency factor set at 0.25 [@fish96; @fish_rohr99; @potvin_etal21], $\eta_{\text{prop}}$ is a propulsive efficiency factor set at 0.90 [@gough_etal21], $BMR_{\text{kleiber}}$ is the basal metabolic rate using a Kleiber function ($70*{M_{\text{body}}}^{075}$) [@kleiber75]. To determine the energetic cost of a single migration day ($E_{\text{mig-day}}$; kJ), we multiplied the per-second value of $E_{\text{swim.sec}}$ by the percentage of time spent actively fluking for each species ($\%_{\text{fluke}}$) and the number of seconds in a day:
+where $P_{\text{T}}$ is the thrust power output ($Wkg^{-1}$) estimated for a given forward swimming speed ($U_{swim}$; $ms^{-1}$) with a regression taken from Gough et al. [@gough_etal21], $\eta_{\text{met}}$ is a metabolic efficiency factor set at 0.25 [@fish96; @fish_rohr99; @potvin_etal21], $\eta_{\text{prop}}$ is a propulsive efficiency factor set at 0.90 [@gough_etal21], $BMR_{\text{kleiber}}$ is the basal metabolic rate using a Kleiber function ($70*{M_{\text{body}}}^{075}$) [@kleiber75]. To determine the energetic cost of a single migration day ($E_{\text{mig-day}}$; kJ), we multiplied the per-second value of $E_{\text{swim.sec}}$ by the percentage of time spent actively fluking for each species ($\%_{\text{fluke}}$) and the number of seconds in a day:
 
 $$
 E_{\text{mig.day}} = (E_{\text{swim.sec}}*\%_{\text{fluke}}*86400) + ({BMR_{\text{kleiber}}}*(1-\%_{\text{fluke}})) \quad (5)
@@ -772,11 +796,11 @@ $$
 E_{\text{mig.year.standard}} = E_{\text{mig.day}}*T_{\text{mig.year.standard}} \quad (6)
 $$
 
-## Speed-Adjusted Energetics
+## Speed-Adjusted Foraging Season and Migration Route Energetics
 
-We used previously published data from 2 migrating blue whales [@oestreich_etal20] to compare straight-line migration speed to both $U_{\text{over-ground}}$ and $U_{\text{swim}}$. These measurements resulted in a multiplicative factor of 2.0 to convert values of $U_{\text{over-ground}}$ from our satellite tag dataset into $U_{\text{swim}}$ values that could be used to more accurately calculate $E_{\text{swim-sec}}$. This factor also allowed us to create a range of speeds for both $U_{\text{over-ground}}$ and $U_{\text{swim}}$ to calculate changes in annual energy flux.
+We used previously published data from 2 migrating blue whales [@oestreich_etal20] to compare $U_{\text{over-ground}}$ and $U_{\text{swim}}$. These measurements resulted in a multiplicative factor of 2.0 to convert values of $U_{\text{over-ground}}$ from our satellite tag dataset into $U_{\text{swim}}$ values that could be used to more accurately calculate $E_{\text{swim-sec}}$. This factor also allowed us to create a range of speeds for both $U_{\text{over-ground}}$ and $U_{\text{swim}}$ to calculate changes in annual energy flux.
 
-For a given $U_{\text{over-ground}}$ value, we could calculate an adjusted value for the duration of a uni-directional migration period ($T_{\text{mig.uni.adj}}$) using the equation:
+For a given $U_{\text{over-ground}}$ value, we could calculate an adjusted value for the duration of a unidirectional migration period ($T_{\text{mig.uni.adj}}$) using the equation:
 
 $$
 T_{\text{mig.uni.adj}}=\frac{D_{\text{mig}}*1000*86400}{U_{\text{over-ground}}} \quad (7)
@@ -800,7 +824,7 @@ $$
 E_{\text{mig.year.adj}} = E_{\text{mig.uni.adj}}*2 \quad (10)
 $$
 
-We then used our $T_{\text{mig.year.adj}}$ values across our range of $U_{\text{over-ground}}$ to calculate the change in feeding season duration from $T_{\text{mig.year.standard}}$ due to migration speed ($\Delta T_{\text{feed}}$) using the equation:
+We then used our $T_{\text{mig.year.adj}}$ values across our range of $U_{\text{over-ground}}$ to calculate the change in foraging season duration from $T_{\text{mig.year.standard}}$ due to migration speed ($\Delta T_{\text{feed}}$) using the equation:
 
 $$
 \Delta T_{\text{feed.year}} = T_{\text{mig.year.adj}}-T_{\text{mig.year.standard}} \quad (11)
@@ -818,23 +842,25 @@ $$
 E_{\text{feed.year.adj}} = E_{\text{feed.year.standard}} - \Delta E_{\text{feed.year}} \quad (13)
 $$
 
-We then calculated the ratio of between $E_{\text{mig.year.adj}}$ and $E_{\text{feed.year.adj}}$ ($E_{ratio}$) using the following equation:
+## Optimal Migration Speeds
+
+We calculated the ratio of between $E_{\text{mig.year.adj}}$ and $E_{\text{feed.year.adj}}$ ($E_{ratio}$) using the following equation:
 
 $$
 E_{\text{ratio}} = \frac{E_{\text{mig.year.adj}}}{E_{\text{feed.year.adj}}} \quad (14)
 $$
 
-Finally, we could calculate the speed values (both $U_{\text{swim}}$ and $U_{\text{over-ground}}$) at which $E_{\text{ratio}}$ is minimized ($U_{opt}$) using the following equation:
+We calculated the speed values (both $U_{\text{over-ground}}$ and $U_{\text{swim}}$) at which $E_{\text{ratio}}$ is minimized ($U_{opt}$) using the following equation:
 
 $$
 U_{\text{opt}} = min(E_{\text{ratio}}) \quad (15)
 $$
 
-We repeated these analyses for a range of $D_{\text{mig}}$ values from 2000-12000km, informed by the range of migration distances found in our review of satellite tracks in the literature. For each value of $D_{\text{mig}}$ in this range, we could calculate the minimum value of $E_{\text{mig.year.adj}}$ as a percentage of $E_{\text{feed.year.adj}}$. A schematic of our workflow is given in Figure S2.
+We repeated these analyses for a range of $D_{\text{mig}}$ values from 2000-12000km, informed by the range of migration distances found in our review of satellite tracks in the literature (Figure S1 and Table S1). For each value of $D_{\text{mig}}$ in this range, we could calculate the minimum value of $E_{\text{mig.year.adj}}$ as a percentage of $E_{\text{feed.year.adj}}$. A schematic of our workflow is given in Figure S2.
 
-![Figure S2. Simplified schematic showing the progression from external data sources to our optimal migratory speed calculations. Satellite tag data was sourced from the literature and is detailed in Table S1, while multi-sensor tag data and morphometrics were obtained from Gough et al. (-@gough_etal22). Together, these data were used to calculate the foraging and migration energetics for a generalized annual cycle (50 days on each migration route, 60 days on the breeding ground, 205 days on the feeding ground). We recalculated these energetics at each over-ground swimming speed between 0.5-2.0m s-1 for each uni-directional migration distance between 2000-12000km. From these speed-adjusted models, we could determine which over-ground swimming speed produced the optimal value of $E_{\text{ratio}}$ at each uni-directional migration distance.](./figs/Methods/EquationSchematic.jpg)
+![Figure S2. Simplified schematic showing the progression from external data sources to our optimal migration speed calculations. Satellite tag data was sourced from the literature and is detailed in Table S1, while multi-sensor tag data and morphometrics were obtained from Gough et al. [@gough_etal22]. Together, these data were used to calculate the foraging and migration energetics for a generalized annual cycle (50 days on each migration route, 60 days on the breeding ground, 205 days on the foraging ground). We recalculated these energetics at each over-ground migration speed between 0.5-2.0 $ms^{-1}$ for each unidirectional migration distance between 2000-12000km. From these speed-adjusted models, we could determine which over-ground migration speed produced the optimal value of Eratio at each unidirectional migration distance.](./figs/Methods/EquationSchematic.jpg)
 
-# Supplemental Table
+# Supplemental Information
 
 ``` {r Literature Review Data, echo=FALSE}
 LitDataForTable <- MigrationDistancesLit %>% 
@@ -851,9 +877,7 @@ kable(LitDataForTable, digits = 2, 'pipe',
       caption = "Table S1. Metadata for satellite tag-derived migration tracks obtained from a review of the literature.")
 ```
 
-## Supplemental Figures
-
-```{r Figure S3 - LitSpeedCurves, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 4)}
+```{r Figure S3 - LitSpeedCurves, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 8)}
 pal <- c("Antarctic Minke" = "#009E73",  "Humpback" = "#D55E00", "Fin" = "#9100B2", "Blue" = "#0072B2", "Gray" = "darkgrey", "Sei" = "#FFCC00")
 
 pLSC <- ggplot(LitHumpBlueEnergy) +
@@ -884,9 +908,9 @@ ggsave("figs/Extras/LitSpeedCurves.pdf", height = 720, width = 960, units = "mm"
 convert_pdf_to_png("figs/Extras/LitSpeedCurves.pdf", "figs/Extras/LitSpeedCurves.png", dpi = 300)
 ```
 
-![Figure S3. Relationship between over-ground swimming speed and the energetic ratio between annual migration costs and annual feeding season energy intake for migration tracks of humpback and blue whales. Values were obtained from the literature and detailed in Table S1. (@kettemer_etal22; @mate_etal15; @modest_etal21; @palacios_etal19;@palacios_etal20; @riekkola_etal20)](./figs/Extras/LitSpeedCurves.png)
+![Figure S3. Relationship between over-ground migration speed and the energetic ratio between annual migration costs and annual foraging season energy intake for migration tracks of humpback and blue whales. Values were obtained from the literature and detailed in Table S1. [@kettemer_etal22; @modest_etal21; @palacios_etal19; @palacios_etal20; @riekkola_etal20]](./figs/Extras/LitSpeedCurves.png)
 
-```{r EXTRA FIGURE - NOT INCLUDED - BlueWhaleSpeedsMapped, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 4), fig.cap = "Figure S1. Data from two multi-sensor blue whale tag deployments used to calculate a conversion factor between over-ground speed and swimming speed. The map on the left shows the gps tracks for each whale during the period of migration swimming. The graphs on the right show the time-depth traces for each whale during the same period of migration swimming."}
+```{r EXTRA FIGURE - NOT INCLUDED - BlueWhaleSpeedsMapped, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 8)}
 
 load("data/bf.rda")
 load("data/world.rda")
@@ -991,5 +1015,17 @@ ggsave("figs/Extras/EnergyTimeRatio.pdf", height = 720, width = 960, units = "mm
 
 convert_pdf_to_png("figs/Extras/EnergyTimeRatio.pdf", "figs/Extras/EnergyTimeRatio.png", dpi = 300)
 ```
+
+# Author Contributions
+
+Conceptualization - W.T.G, M.F.C, M.S.S., J.A.G.; Methodology, W.T.G., M.F.C., J.A.G.; Formal Analysis - W.T.G., J.F.; Visualization - W.T.G, M.F.C, J.F., J.A.G.; Writing - Original Draft - W.T.G.; Writing - Review and Editing - all authors
+
+# Acknowledgements
+
+W.T.G. was supported by the National Science Foundation (NSF), the Office of Naval Research (ONR), the United States Pacific Fleet (FLEET), and the National Oceanographic and Atmospheric Administration (NOAA) during the development of this work. We would like to thank the members of the Marine Mammal Research Program at the University of Hawaii at Manoa, the members of the Goldbogen Lab at Stanford University's Hopkins Marine Station, and Dr. Frank Fish for their support and advice on the figures and writing.
+
+# Declaration of Interests
+
+The authors declare no competing interests.
 
 # References

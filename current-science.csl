@@ -118,17 +118,19 @@
       <text variable="citation-number"/>
     </layout>
   </citation>
-  <bibliography entry-spacing="0" second-field-align="flush" et-al-min="7" et-al-use-first="3">
+  <bibliography entry-spacing="0" second-field-align="flush" et-al-min="999" et-al-use-first="999">
     <layout suffix=".">
       <text variable="citation-number" suffix=". "/>
       <group delimiter=" ">
         <text macro="author" suffix=","/>
+        <date variable="issued">
+          <date-part name="year"/>
+        </date>
         <text macro="title"/>
         <text macro="container-title"/>
         <text macro="container-contributors" suffix=","/>
         <text macro="edition"/>
         <text macro="publisher" suffix=","/>
-        <text macro="issued"/>
       </group>
       <text macro="locators" prefix=", "/>
     </layout>
