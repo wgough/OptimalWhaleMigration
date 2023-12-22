@@ -1018,7 +1018,7 @@ convert_pdf_to_png("figs/Extras/EnergyTimeRatio.pdf", "figs/Extras/EnergyTimeRat
 
 # Author Contributions
 
-Conceptualization - W.T.G, M.F.C, M.S.S., J.A.G.; Methodology, W.T.G., M.F.C., J.A.G.; Formal Analysis - W.T.G., J.F.; Visualization - W.T.G, M.F.C, J.F., J.A.G.; Writing - Original Draft - W.T.G.; Writing - Review and Editing - all authors
+Conceptualization - W.T.G, M.F.C, M.S.S., W.K.O., E.L.H., L.B., J.A.G.; Data Curation - W.T.G., D.M.P.; Formal Analysis - W.T.G., J.F.; Methodology - W.T.G., M.F.C., E.L.H., J.A.G.; Visualization - W.T.G, M.F.C, J.F., J.A.G.; Resources - D.M.P., J.C.; Funding Aquisition - L.B., J.A.G.; Writing - Original Draft - W.T.G.; Writing - Review and Editing - all authors
 
 # Acknowledgements
 

@@ -1,21 +1,31 @@
-Species,SpeciesBinom,BodyLength_m,Log10BodyLength_m,BodyMassFromShirel_kg
-Blue,Balaenoptera musculus,20,1.301029996,44803.77665
-Blue,Balaenoptera musculus,21,1.322219295,52719.64294
-Blue,Balaenoptera musculus,22,1.342422681,61566.24574
-Blue,Balaenoptera musculus,23,1.361727836,71403.19449
-Blue,Balaenoptera musculus,24,1.380211242,82291.01264
-Fin,Balaenoptera physalus,17,1.230448921,29984.37156
-Fin,Balaenoptera physalus,18,1.255272505,34778.60441
-Fin,Balaenoptera physalus,19,1.278753601,40017.09833
-Fin,Balaenoptera physalus,20,1.301029996,45714.3805
-Fin,Balaenoptera physalus,21,1.322219295,51884.67131
-Humpback,Megaptera Novaeangliae,10,1,15516.72274
-Humpback,Megaptera Novaeangliae,11,1.041392685,19388.63
-Humpback,Megaptera Novaeangliae,12,1.079181246,23761.30705
-Humpback,Megaptera Novaeangliae,13,1.113943352,28649.68144
-Humpback,Megaptera Novaeangliae,14,1.146128036,34067.876
-Antarctic Minke,Balaenoptera bonaerensis,6,0.77815125,3766.17345
-Antarctic Minke,Balaenoptera bonaerensis,7,0.84509804,5005.459169
-Antarctic Minke,Balaenoptera bonaerensis,8,0.903089987,6404.161302
-Antarctic Minke,Balaenoptera bonaerensis,9,0.954242509,7959.011403
-Antarctic Minke,Balaenoptera bonaerensis,10,1,9667.184338
+Species,SpeciesBinom,BodyLength_m,ForagingRateRegime,DailyForageRate
+Blue,Balaenoptera musculus,20,Low,138
+Blue,Balaenoptera musculus,20,Average,204
+Blue,Balaenoptera musculus,20,High,270
+Blue,Balaenoptera musculus,21,Low,138
+Blue,Balaenoptera musculus,21,Average,204
+Blue,Balaenoptera musculus,21,High,270
+Blue,Balaenoptera musculus,22,Low,138
+Blue,Balaenoptera musculus,22,Average,204
+Blue,Balaenoptera musculus,22,High,270
+Blue,Balaenoptera musculus,23,Low,138
+Blue,Balaenoptera musculus,23,Average,204
+Blue,Balaenoptera musculus,23,High,270
+Blue,Balaenoptera musculus,24,Low,138
+Blue,Balaenoptera musculus,24,Average,204
+Blue,Balaenoptera musculus,24,High,270
+Humpback,Megaptera Novaeangliae,10,Low,296
+Humpback,Megaptera Novaeangliae,10,Average,546
+Humpback,Megaptera Novaeangliae,10,High,812
+Humpback,Megaptera Novaeangliae,11,Low,296
+Humpback,Megaptera Novaeangliae,11,Average,546
+Humpback,Megaptera Novaeangliae,11,High,812
+Humpback,Megaptera Novaeangliae,12,Low,296
+Humpback,Megaptera Novaeangliae,12,Average,546
+Humpback,Megaptera Novaeangliae,12,High,812
+Humpback,Megaptera Novaeangliae,13,Low,296
+Humpback,Megaptera Novaeangliae,13,Average,546
+Humpback,Megaptera Novaeangliae,13,High,812
+Humpback,Megaptera Novaeangliae,14,Low,296
+Humpback,Megaptera Novaeangliae,14,Average,546
+Humpback,Megaptera Novaeangliae,14,High,812

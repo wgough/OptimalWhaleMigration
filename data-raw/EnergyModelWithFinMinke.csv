@@ -1,0 +1,61 @@
+Species,SpeciesBinom,BodyLength_m,Log10BodyLength_m,BodyMassFromShirel_kg,ForagingRateQual,ForagingRateQuant
+Blue,Balaenoptera musculus,20,1.301029996,44803.77665,Low,138
+Blue,Balaenoptera musculus,20,1.301029996,44803.77665,Average,204
+Blue,Balaenoptera musculus,20,1.301029996,44803.77665,High,270
+Blue,Balaenoptera musculus,21,1.322219295,52719.64294,Low,138
+Blue,Balaenoptera musculus,21,1.322219295,52719.64294,Average,204
+Blue,Balaenoptera musculus,21,1.322219295,52719.64294,High,270
+Blue,Balaenoptera musculus,22,1.342422681,61566.24574,Low,138
+Blue,Balaenoptera musculus,22,1.342422681,61566.24574,Average,204
+Blue,Balaenoptera musculus,22,1.342422681,61566.24574,High,270
+Blue,Balaenoptera musculus,23,1.361727836,71403.19449,Low,138
+Blue,Balaenoptera musculus,23,1.361727836,71403.19449,Average,204
+Blue,Balaenoptera musculus,23,1.361727836,71403.19449,High,270
+Blue,Balaenoptera musculus,24,1.380211242,82291.01264,Low,138
+Blue,Balaenoptera musculus,24,1.380211242,82291.01264,Average,204
+Blue,Balaenoptera musculus,24,1.380211242,82291.01264,High,270
+Fin,Balaenoptera physalus,17,1.230448921,29984.37156,Low,159
+Fin,Balaenoptera physalus,17,1.230448921,29984.37156,Average,222
+Fin,Balaenoptera physalus,17,1.230448921,29984.37156,High,302
+Fin,Balaenoptera physalus,18,1.255272505,34778.60441,Low,159
+Fin,Balaenoptera physalus,18,1.255272505,34778.60441,Average,222
+Fin,Balaenoptera physalus,18,1.255272505,34778.60441,High,302
+Fin,Balaenoptera physalus,19,1.278753601,40017.09833,Low,159
+Fin,Balaenoptera physalus,19,1.278753601,40017.09833,Average,222
+Fin,Balaenoptera physalus,19,1.278753601,40017.09833,High,302
+Fin,Balaenoptera physalus,20,1.301029996,45714.3805,Low,159
+Fin,Balaenoptera physalus,20,1.301029996,45714.3805,Average,222
+Fin,Balaenoptera physalus,20,1.301029996,45714.3805,High,302
+Fin,Balaenoptera physalus,21,1.322219295,51884.67131,Low,159
+Fin,Balaenoptera physalus,21,1.322219295,51884.67131,Average,222
+Fin,Balaenoptera physalus,21,1.322219295,51884.67131,High,302
+Humpback,Megaptera Novaeangliae,10,1,15516.72274,Low,296
+Humpback,Megaptera Novaeangliae,10,1,15516.72274,Average,546
+Humpback,Megaptera Novaeangliae,10,1,15516.72274,High,812
+Humpback,Megaptera Novaeangliae,11,1.041392685,19388.63,Low,296
+Humpback,Megaptera Novaeangliae,11,1.041392685,19388.63,Average,546
+Humpback,Megaptera Novaeangliae,11,1.041392685,19388.63,High,812
+Humpback,Megaptera Novaeangliae,12,1.079181246,23761.30705,Low,296
+Humpback,Megaptera Novaeangliae,12,1.079181246,23761.30705,Average,546
+Humpback,Megaptera Novaeangliae,12,1.079181246,23761.30705,High,812
+Humpback,Megaptera Novaeangliae,13,1.113943352,28649.68144,Low,296
+Humpback,Megaptera Novaeangliae,13,1.113943352,28649.68144,Average,546
+Humpback,Megaptera Novaeangliae,13,1.113943352,28649.68144,High,812
+Humpback,Megaptera Novaeangliae,14,1.146128036,34067.876,Low,296
+Humpback,Megaptera Novaeangliae,14,1.146128036,34067.876,Average,546
+Humpback,Megaptera Novaeangliae,14,1.146128036,34067.876,High,812
+Antarctic Minke,Balaenoptera bonaerensis,6,0.77815125,3766.17345,Low,849
+Antarctic Minke,Balaenoptera bonaerensis,6,0.77815125,3766.17345,Average,1207
+Antarctic Minke,Balaenoptera bonaerensis,6,0.77815125,3766.17345,High,1615
+Antarctic Minke,Balaenoptera bonaerensis,7,0.84509804,5005.459169,Low,849
+Antarctic Minke,Balaenoptera bonaerensis,7,0.84509804,5005.459169,Average,1207
+Antarctic Minke,Balaenoptera bonaerensis,7,0.84509804,5005.459169,High,1615
+Antarctic Minke,Balaenoptera bonaerensis,8,0.903089987,6404.161302,Low,849
+Antarctic Minke,Balaenoptera bonaerensis,8,0.903089987,6404.161302,Average,1207
+Antarctic Minke,Balaenoptera bonaerensis,8,0.903089987,6404.161302,High,1615
+Antarctic Minke,Balaenoptera bonaerensis,9,0.954242509,7959.011403,Low,849
+Antarctic Minke,Balaenoptera bonaerensis,9,0.954242509,7959.011403,Average,1207
+Antarctic Minke,Balaenoptera bonaerensis,9,0.954242509,7959.011403,High,1615
+Antarctic Minke,Balaenoptera bonaerensis,10,1,9667.184338,Low,849
+Antarctic Minke,Balaenoptera bonaerensis,10,1,9667.184338,Average,1207
+Antarctic Minke,Balaenoptera bonaerensis,10,1,9667.184338,High,1615
