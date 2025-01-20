@@ -1,0 +1,23 @@
+Variable,Symbol,Blue_Values,Humpback_Values,Reference,Short_Reference
+Swimming Speed (m s^-1^),U~swim~,1.0 - 4.0,1.0 - 4.0,Range estimated from Gough et al. 2019; 2021,Gough et al. 2019; 2021
+Over-Ground Speed (m s^-1^),U~over-ground~,0.5 - 2.0,0.5 - 2.0,"Conversion from swimming speed (this study, see supplemental material)",This Study
+Body Length (m),TL~body~,22 ± 20%,12 ± 20%,Average values taken from Gough et al. 2022,Gough et al. 2022
+Lunges Per Day (n),N~lunges~,204 ± 20%,546 ± 20%,Average values taken from Savoca et al. 2021,Savoca et al. 2021
+Breeding Season Duration  (days),T~breed~,50 ± 20%,50 ± 20%,"Sightings data from humpback whales in Maui Nui (Evans and van Aswegen, pers. comm.)","Evans and van Aswegen, pers. comm."
+Percent of Day Fluking (s),%~fluke~,"30,240 (35%)","47,520 (55%)",Values estimated from tag data used by Gough et al. 2019; 2021,Gough et al. 2019; 2021
+Migration Distance (km),D~mig~,2000 - 12000,2000 - 12000,Range estimated from satellite tag dataset (this study),This Study
+Migration Duration (days),T~mig~,-,-,Calculated from migration distance and over-ground speed (this study),This Study
+Feeding Season Net Energetic Balance (kJ),E~feed~,-,-,This Study,This Study
+Feeding Season Duration (days),T~feed~,-,-,This Study,This Study
+Feeding Season Energetic Costs (kJ),E~cost.feed~,-,-,This Study,This Study
+Feeding Season Energetic Intake (kJ),E~intake.feed~,-,-,This Study,This Study
+Energetic Intake of a Foraging Lunge (kJ),E~intake.lunge~,-,-,Regression taken from Gough et al. 2022,Gough et al. 2022
+Energetic Cost of a Foraging Lunge (kJ),E~cost.lunge~,-,-,Regression taken from Gough et al. 2022,Gough et al. 2022
+Daily Metabolic Expenditure (kJ),E~cost.met~,655418 - 1806823,379236 - 771949,"Estimation taken from Kleiber, 1975","Kleiber, 1975"
+Body Mass (kg),M~body~,29254 - 113079,14105 - 36387,"Regressions taken from Kahane-Rapport & Goldbogen, 2018","Kahane-Rapport & Goldbogen, 2018"
+Migration Route Energetic Cost (kJ),E~mig~,-,-,This Study,This Study
+Per-Second Energetic Cost of Swimming (kJ s^-1^),E~cost.swim~,-,-,This Study,This Study
+Thrust Power (W kg^-1^),P~t~,-,-,Regression taken from Gough et al. 2021,Gough et al. 2021
+Metabolic Efficiency (%),U~met~,0.25,0.25,"Constant used in previous studies (Potvin et al., 2021; Gough et al. 2022)","Potvin et al., 2021; Gough et al. 2022"
+Propulsive Efficiency (%),U~prop~,0.9,0.9,Constant taken from Gough et al. 2021,Gough et al. 2021
+Optimal Migration Speed (m s^-1^),U~opt~,-,-,This Study,This Study
