@@ -1,6 +1,6 @@
 #first time need to install package
 #install.packages("maptools")
-library(maptools)
+library(sf)
 library(lubridate)
 
 

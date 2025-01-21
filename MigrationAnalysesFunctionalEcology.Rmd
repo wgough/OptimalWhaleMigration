@@ -132,7 +132,7 @@ energy_model <- function(MigrationSwimSpeeds_ms, BreedingDays, MigrationDistance
   ECostSwimAndBMR_Feeding_kJ_Day = (ECostSwim_Feeding_kJ_s*(86400*PercentFluking)) + (DailyBMREnergyExpenditure)
   ECostSwimAndBMR_Migration_kJ_Day = (ECostSwim_Migration_kJ_s*(86400*PercentFluking)) + (DailyBMREnergyExpenditure)
   
-  # Feeding Season Energetics UPDATE HERE
+  # Feeding Season Energetics
   ECostLunge <- function(BodyLength_m){
     10^((2.07*log10(BodyLength_m))+0.83)
   }
@@ -143,6 +143,7 @@ energy_model <- function(MigrationSwimSpeeds_ms, BreedingDays, MigrationDistance
   EIntakeFeedSeason_kJ = LungesPerSeason * EIntakeLunge(BodyLength_m) * PercentIntakePerLunge
   ECostFeedSeason_kJ = FeedingGroundDays * ECostSwimAndBMR_Feeding_kJ_Day + LungesPerSeason * ECostLunge(BodyLength_m)
   ENetFeedSeason_kJ = EIntakeFeedSeason_kJ - ECostFeedSeason_kJ
+  ENetFeedGroundDay_kJ = ENetFeedSeason_kJ / FeedingGroundDays
   
   # Migratory Route Energetics
   ECostMigration_kJ = ECostSwimAndBMR_Migration_kJ_Day * MigratoryDays
@@ -152,11 +153,16 @@ energy_model <- function(MigrationSwimSpeeds_ms, BreedingDays, MigrationDistance
   EPercentMigrationFeed = ERatioMigrationFeed * 100
   
   return(list(OverGroundSpeeds_ms = OverGroundSpeeds_ms,
+              ECostSwim_Feeding_kJ_s = ECostSwim_Feeding_kJ_s,
               ECostSwimAndBMR_Feeding_kJ_Day = ECostSwimAndBMR_Feeding_kJ_Day,
+              ECostSwim_Migration_kJ_s = ECostSwim_Migration_kJ_s,
               ECostSwimAndBMR_Migration_kJ_Day = ECostSwimAndBMR_Migration_kJ_Day,
               ECostLunge = ECostLunge(BodyLength_m),
+              ECostFeedSeason_kJ = ECostFeedSeason_kJ,
               EIntakeLunge = EIntakeLunge(BodyLength_m),
+              EIntakeFeedSeason_kJ = EIntakeFeedSeason_kJ,
               ENetFeedSeason_kJ = ENetFeedSeason_kJ,
+              ENetFeedGroundDay_kJ = ENetFeedGroundDay_kJ,
               ECostMigration_kJ = ECostMigration_kJ,
               ERatioMigrationFeed = ERatioMigrationFeed,
               EPercentMigrationFeed = EPercentMigrationFeed,
@@ -167,15 +173,15 @@ energy_model <- function(MigrationSwimSpeeds_ms, BreedingDays, MigrationDistance
 ```
 
 ```{r Create Blue and Humpback Dataframes, include=FALSE}
-modifier <- c(0.8, 0.85, 0.9, 0.95, 1, 1.05, 1.1, 1.15, 1.2)
+modifier <- c(0.9, 0.95, 1, 1.05, 1.1)
 
 dataframe_humpback = expand_grid(MigrationSwimSpeeds_ms = seq(1, 4, by = 0.1),
                                  BreedingDays = 50 * modifier,
                                  MigrationDistance_km = seq(2000, 12000, by = 2000),
                                  BodyLength_m = 12 * modifier,
                                  LungesPerDay = 546 * modifier,
-                                 PercentDaysSpentFeeding = 0.5,
-                                 PercentIntakePerLunge = c(0.3, 0.5, 0.7),
+                                 PercentDaysSpentFeeding = 0.5 * modifier,
+                                 PercentIntakePerLunge = 0.5 * modifier,
                                  PercentFluking = 0.55 * modifier) %>% 
   mutate(model_results = pmap(
     .l = list(MigrationSwimSpeeds_ms, BreedingDays, MigrationDistance_km, BodyLength_m, LungesPerDay, PercentDaysSpentFeeding, PercentIntakePerLunge, PercentFluking, Species = "Humpback"),
@@ -184,7 +190,9 @@ dataframe_humpback = expand_grid(MigrationSwimSpeeds_ms = seq(1, 4, by = 0.1),
     ECostSwimAndBMR_Feeding_kJ_Day = map_dbl(model_results, "ECostSwimAndBMR_Feeding_kJ_Day"),
     ECostSwimAndBMR_Migration_kJ_Day = map_dbl(model_results, "ECostSwimAndBMR_Migration_kJ_Day"),
     ECostLunge = map_dbl(model_results, "ECostLunge"),
+    ECostFeedSeason_kJ = map_dbl(model_results, "ECostFeedSeason_kJ"),
     EIntakeLunge = map_dbl(model_results, "EIntakeLunge"),
+    EIntakeFeedSeason_kJ = map_dbl(model_results, "EIntakeFeedSeason_kJ"),
     ENetFeedSeason_kJ = map_dbl(model_results, "ENetFeedSeason_kJ"),
     ECostMigration_kJ = map_dbl(model_results, "ECostMigration_kJ"),
     ERatioMigrationFeed = map_dbl(model_results, "ERatioMigrationFeed"),
@@ -200,8 +208,8 @@ dataframe_blue = expand_grid(MigrationSwimSpeeds_ms = seq(1, 4, by = 0.1),
                              MigrationDistance_km = seq(2000, 12000, by = 2000),
                              BodyLength_m = 22 * modifier,
                              LungesPerDay = 204 * modifier,
-                             PercentDaysSpentFeeding = 0.5,
-                             PercentIntakePerLunge = c(0.3, 0.5, 0.7),
+                             PercentDaysSpentFeeding = 0.5 * modifier,
+                             PercentIntakePerLunge = 0.5 * modifier,
                              PercentFluking = 0.35 * modifier) %>% 
   mutate(model_results = pmap(
     .l = list(MigrationSwimSpeeds_ms, BreedingDays, MigrationDistance_km, BodyLength_m, LungesPerDay, PercentDaysSpentFeeding, PercentIntakePerLunge, PercentFluking, Species = "Blue"),
@@ -210,7 +218,9 @@ dataframe_blue = expand_grid(MigrationSwimSpeeds_ms = seq(1, 4, by = 0.1),
     ECostSwimAndBMR_Feeding_kJ_Day = map_dbl(model_results, "ECostSwimAndBMR_Feeding_kJ_Day"),
     ECostSwimAndBMR_Migration_kJ_Day = map_dbl(model_results, "ECostSwimAndBMR_Migration_kJ_Day"),
     ECostLunge = map_dbl(model_results, "ECostLunge"),
+    ECostFeedSeason_kJ = map_dbl(model_results, "ECostFeedSeason_kJ"),
     EIntakeLunge = map_dbl(model_results, "EIntakeLunge"),
+    EIntakeFeedSeason_kJ = map_dbl(model_results, "EIntakeFeedSeason_kJ"),
     ENetFeedSeason_kJ = map_dbl(model_results, "ENetFeedSeason_kJ"),
     ECostMigration_kJ = map_dbl(model_results, "ECostMigration_kJ"),
     ERatioMigrationFeed = map_dbl(model_results, "ERatioMigrationFeed"),
@@ -222,27 +232,18 @@ dataframe_blue = expand_grid(MigrationSwimSpeeds_ms = seq(1, 4, by = 0.1),
   )
 
 dataframe_combined <- rbind(dataframe_humpback, dataframe_blue)
-```
 
-```{r Create Sampling Distributions For Figure 2, include=FALSE}
-bootstrap_sampling <- function(data, n_samples = 10000) {
-  data %>%
-    filter(!is.na(EPercentMigrationFeed)) %>%
-    group_by(MigrationDistance_km) %>%
-    summarise(Sampling_Distribution = list(
-      if (n() > 0) {
-        as.vector(unlist(replicate(n_samples, sample(EPercentMigrationFeed, replace = TRUE))))
-      } else {
-        numeric(0)
-      }
-    )) %>%
-    unnest(cols = c(Sampling_Distribution), keep_empty = TRUE)
-}
-
-combined_sampling <- bind_rows(
-  bootstrap_sampling(dataframe_blue, "Blue Whale"),
-  bootstrap_sampling(dataframe_humpback, "Humpback Whale")
-)
+selected_row <- dataframe_humpback %>%
+  filter(
+    MigrationDistance_km == 4000,
+    BreedingDays == 50,
+    MigrationSwimSpeeds_ms == 2,
+    BodyLength_m == 12,
+    LungesPerDay == 546,
+    PercentFluking == 0.55,
+    PercentDaysSpentFeeding == 0.5,
+    PercentIntakePerLunge == 0.5
+  )
 ```
 
 ```{r Create Useful Dataframes For Figure 3, include=FALSE}
@@ -310,14 +311,15 @@ t_test_SpeedStats <- glance(t_test_MigrationSpeed_Direction)
 ```{r Figure 2 - MigrationEnergeticPercentages, echo=FALSE, message=FALSE, warning=FALSE, results='hide', fig.keep='none', fig.align='center', fig.dim = c(8, 8)}
 pal <- c("Humpback" = "#58084F", "Blue" = "#258d12")
 
-pMEP <- ggplot(dataframe_combined) +
+pMEP <- ggplot(filter(dataframe_combined, MigrationDistance_km != 12000)) +
+  geom_hline(yintercept = 100, linetype = "dashed", size = 5) +
   geom_rug(data = MigrationDistancesLit, aes(x = Migration_Distance_km*2, color = Species), sides = "b", size = 3)+
   geom_boxplot(aes(x=MigrationDistance_km*2, y=EPercentMigrationFeed, fill=Species, group = interaction(Species, MigrationDistance_km)), size = 3, outlier.shape = NA, position = position_dodge(width = 3200)) +
   geom_vline(xintercept = DistancePercentile*2, linetype = "dotted", size = 5) +
-  annotate("text", x=17600, y=118, label="95% Percentile of Distance", size = 16, angle="90") +
-  coord_cartesian(xlim = c(3000,25000), ylim = c(0,120), expand = TRUE) +
-  scale_x_continuous(breaks = seq(4000, 24000, by = 4000)) +
-  scale_y_continuous(breaks = seq(0, 120, by = 5)) +
+  annotate("text", x=17600, y=170, label="95% Percentile of Distance", size = 16, angle="90") +
+  coord_cartesian(xlim = c(3000,21000), ylim = c(0,200), expand = TRUE) +
+  scale_x_continuous(breaks = seq(4000, 20000, by = 4000)) +
+  scale_y_continuous(breaks = seq(0, 200, by = 20)) +
   scale_color_manual(values = pal) +
   scale_fill_manual(values = pal) +
   labs(x = "Annual Migration Distance Covered (km)",
@@ -351,27 +353,28 @@ pal <- c("Mean_FeedingGroundDays" = "#305496",
          "Mean_BreedingDays" = "#D3D3D3")
 
 # Update the plot
-pSC <- ggplot(speed_averaged_dataframe) +
+pSC <- ggplot(filter(speed_averaged_dataframe, MigrationDistance_km != 12000)) +
   geom_vline(xintercept = 2.09/2, linetype = 2, size = 2, colour = "#58084F") +
   annotate("text", x=2.09/2+0.02, y=0.40, label="Humpback", size = 14, angle = 270, color = "#58084F", hjust=0) +
   geom_vline(xintercept = 2.20/2, linetype = 2, size = 2, colour = "#258d12") +
   annotate("text", x=2.20/2+0.02, y=0.40, label="Blue", size = 14, angle = 270, color = "#258d12", hjust=0) +
   geom_line(aes(OverGroundSpeeds_ms, MeanRatio, group = factor(MigrationDistance_km), color = factor(MigrationDistance_km)), size = 3) +
-  geom_segment(data=time_chunk_dataframe, aes(x = OptSpeed,
+  geom_segment(data=filter(time_chunk_dataframe, MigrationDistance_km != 12000), aes(x = OptSpeed,
                    xend = OptSpeed,
                    y = MinRatio-0.25,
                    yend = MinRatio+0.25),
                size = 4) +
-  geom_pie_glyph(data=time_chunk_dataframe, 
+  geom_pie_glyph(data=filter(time_chunk_dataframe, MigrationDistance_km != 12000), 
                  aes(x=OptSpeed, y=MinRatio, fill=TimeSlice), 
                  slices = 'TimeSlice', values = 'Days', colour = 'black', radius = 2.5) +
-  annotate("text", x=0.51, y=-1.833, label="2000km", size = 16) +
-  annotate("text", x=0.51, y=-1.298, label="4000km", size = 16) +
-  annotate("text", x=0.51, y=-0.568, label="6000km", size = 16) +
-  annotate("text", x=0.615, y=0.234, label="8000km", size = 16) +
-  annotate("text", x=0.76, y=0.304, label="10000km", size = 16) +
-  annotate("text", x=0.91, y=0.375, label="12000km", size = 16) +
-  coord_cartesian(ylim = c(-2.5,0.35)) +
+  annotate("text", x=0.51, y=-0.943, label="2000km", size = 16) +
+  annotate("text", x=0.51, y=-0.408, label="4000km", size = 16) +
+  annotate("text", x=0.51, y=0.308, label="6000km", size = 16) +
+  annotate("text", x=0.615, y=1.254, label="8000km", size = 16) +
+  annotate("text", x=0.76, y=1.324, label="10000km", size = 16) +
+  #annotate("text", x=0.91, y=0.375, label="12000km", size = 16) +
+  coord_cartesian(ylim = c(-1.7, 1.35)) +
+  scale_y_continuous(breaks = seq(-1.5, 1.25, by = 0.25), labels = scales::label_number(accuracy = 0.01)) +
   scale_color_manual(values = c("Humpback" = "#58084F", "Blue" = "#258d12")) +
   scale_fill_manual(values = pal, 
                     labels = c("Feeding Days", "Migratory Days", "Breeding Days"),
@@ -474,7 +477,9 @@ We included blue (*Balaenoptera musculus*) and humpback (*Megaptera novaeangliae
 
 Previous work by Gough et al. [-@gough_etal19; -@gough_etal21] found the average swimming speed ($U_{\text{swim}}$; m s^-1^) of both blue and humpback whales to be ~2 m s^-1^. The two migrating blue whales in our dataset contained highly accurate GPS-positioning and fine-scale movement data [@oestreich_etal20], allowing us to compare swimming speeds with over-ground speeds (i.e., the "real" time that it takes for an animal to swim from one geographic position to another; $U_{\text{over-ground}}$; m s^-1^). These measurements resulted in a multiplicative factor of 2.0 to convert over-ground speed values into swimming speed values. This allowed us to create a range of swimming (1-4 m s^-1^) and over-ground (0.5-2 m s^-1^) speed values for use in our energetic modeling.
 
-Given the potential for substantial variability in our model, we generated anchored ranges (±20%) for a series of critical variables and performed our calculations for each combination of values. These variables included total body length ($TL_{\text{body}}$; m), the number of feeding lunges performed per day ($N_{\text{lunges}}$; lunges day^-1^), the number of days spent on the breeding ground in a given year ($T_{\text{breed}}$; days), and the percentage of time (in seconds) spent actively swimming (i.e., expending energy to generate propulsive tailbeats) throughout an average day ($\%_{\text{fluke}}$; s). We used our UAS-photogrammetry dataset to anchor body length at 22 m for blue whales and 12 m for humpback whales. For the daily lunge rate, we took a value of 204 lunges day^-1^ for blue whales and 546 lunges day^-1^ for humpack whales from Savoca et al. [-@savoca_etal21]. We estimated the percentage of time spent fluking at 35% (30,240 s) for blue whales and 55% (47,520 s) for humpback whales using our published CATS tag dataset and tailbeat-detection methods outlined by Gough et al. [-@gough_etal19; -@gough_etal21]. In the absence of more reliable estimates for blue whales, we set the amount of time spent on the breeding ground at 50 days for both blue and humpback whales from sighting data of humpback whales in Maui Nui (Evans and van Aswegen, pers. comm.). In order to capture the majority of potential migrations undertaken by large cetaceans, we performed our energetic calculations for unidirectional migration distances ($D_{\text{mig}}$; km) ranging from 2,000-12,000 km.
+Given the potential for substantial variability in our model, we generated anchored ranges (±10%) for a series of critical variables and performed our calculations for each combination of values. These variables included total body length ($TL_{\text{body}}$; m), the number of feeding lunges performed per day ($N_{\text{lunges}}$; lunges day^-1^), and the percentage of time (in seconds) spent actively swimming (i.e., expending energy to generate propulsive tailbeats) throughout an average day ($\%_{\text{fluke}}$; s), the percentage of days spent on the feeding ground that included active foraging ($\%_{\text{feed}}$), the percentage of feeding season energy intake relative to our predicted maximum ($\%_{\text{intake}}$), and the number of days spent on the breeding ground in a given year ($T_{\text{breed}}$; days). We used our UAS-photogrammetry dataset to anchor body length at 22 m for blue whales and 12 m for humpback whales. For the daily lunge rate, we took a value of 204 lunges day^-1^ for blue whales and 546 lunges day^-1^ for humpack whales from Savoca et al. [-@savoca_etal21]. We estimated the percentage of time spent fluking at 35% (30,240 s) for blue whales and 55% (47,520 s) for humpback whales using our published CATS tag dataset and tailbeat-detection methods outlined by Gough et al. [-@gough_etal19; -@gough_etal21]. We estimated the percentage of days spent actively foraging the feeding ground at 50% to account for non-foraging behaviors (e.g., searching, socializing). Using the intake values modeled by Gough et al.[-@gough_etal22] as a theoretical kinematic and energetic maximum for a feeding lunge, we estimated our energy intake for a given season to be 50%, thus bringing us more in line with lower estimates such as those suggested AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA (In the absence of more reliable estimates for blue whales, we set the amount of time spent on the breeding ground at 50 days for both blue and humpback whales from sighting data of humpback whales in Maui Nui (Evans and van Aswegen, pers. comm.). 
+
+In order to capture the majority of potential migrations undertaken by large cetaceans, we performed our energetic calculations for unidirectional migration distances ($D_{\text{mig}}$; km) ranging from 2,000-12,000 km.
 
 To validate our model, we compiled satellite tag deployments from multiple literature sources and tag types (Table S1) for blue (n = `r format(as.numeric(nrow(MigrationDistancesLit[MigrationDistancesLit$Species == "Blue", , drop = FALSE]), digits = 0))`) and humpback (n = `r format(as.numeric(nrow(MigrationDistancesLit[MigrationDistancesLit$Species == "Humpback", , drop = FALSE]), digits = 0))`) whales. These deployments covered `r format(as.numeric(nrow(MigrationDistancesLitAvgs), digits = 0))` distinct migration routes, with equatorward (n = `r format(as.numeric(nrow(MigrationDistancesLit[MigrationDistancesLit$Direction_of_Travel == "Equatorward", , drop = FALSE]), digits = 0))`) and poleward (n = `r format(as.numeric(nrow(MigrationDistancesLit[MigrationDistancesLit$Direction_of_Travel == "Poleward", , drop = FALSE]), digits = 0))`) migration routes treated separately. To be included in our dataset, a satellite tag deployment had to include: 1) a complete migration moving in either direction (i.e., from foraging ground to breeding ground or vice-versa), 2) not include any portions of swimming on the foraging or breeding grounds, 3) the overall distance covered by the animal during the migration, and 4) the duration of the migration period ($T_{\text{mig}}$; days). Of the Using this data, we were able to calculate the over-ground speed and, subsequently, the presumed swimming speed of each animal.
 
@@ -482,13 +487,13 @@ To validate our model, we compiled satellite tag deployments from multiple liter
 
 For capital breeding species such as blue and humpback whales, we expect that the majority of annual energy intake occurs on the feeding ground, while the rest of the year involves energy expenditure on the breeding ground and migration routes. Estimating energetic costs on the breeding ground is difficult, but modeling the interactions between annual energy intake and migration costs allowed us to determine the amount of energy remaining for critical reproductive functions.
 
-We started by estimating the energetic intake from a feeding season ($E_{\text{feed}}$; kJ) of a given length ($T_{\text{feed}}$; days) by subtracting the seasonal energetic costs ($E_{\text{cost.feed}}$; kJ) from the seasonal energetic intake ($E_{\text{intake.feed}}$; kJ). We calculated the length of the feeding season:
+We started by estimating the energetic intake from a feeding season ($E_{\text{feed}}$; kJ) of a given length ($T_{\text{feed}}$; days) by subtracting the seasonal energetic costs ($E_{\text{cost.feed}}$; kJ) from the seasonal energetic intake ($E_{\text{intake.feed}}$; kJ). We calculated the length of time spent on the feeding season:
 
 $$
-T_{\text{feed}} = 365 - T_{\text{breed}} - (T_{\text{mig}}*2) \quad (1)
+T_{\text{feed}} = 365 - T_{\text{breed}} - (T_{\text{mig}}*2) * \%_{\text{feed}} \quad (1)
 $$
 
-as the remainder of the annual cycle (365 days) after subtracting the length of the breeding season and the length of the migration: estimated through the interaction of over-ground speed and unidirectional migration distance (multiplied by two to account for the two unidirectional migrations performed in a year). For the energetic intake and cost of the feeding season, we used the following equations:
+as the remainder of the annual cycle (365 days) after subtracting the length of the breeding season and the length of the migration: estimated through the interaction of over-ground speed and unidirectional migration distance (multiplied by two to account for the two unidirectional migrations performed in a year). We then multiplied the length of time spent on the feeding grounds by a percentage  For the energetic intake and cost of the feeding season, we used the following equations:
 
 $$
 E_{\text{intake.feed}} = E_{\text{intake.lunge}}*N_{\text{lunges}}*T_{\text{feed}} \quad (2)
